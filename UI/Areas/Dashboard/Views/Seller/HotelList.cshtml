@@ -1,0 +1,92 @@
+﻿@model IEnumerable<Hotel>
+@{
+    Layout = "~/Areas/Dashboard/Views/Shared/_DashboardLayout.cshtml";
+}
+
+<div class="card">
+    <div class="card-header col-lg-12">
+        <div class="row">
+            <div class="col-md-9">
+                <h4>Hotel List</h4>
+            </div>
+            <div class="col-md-3 text-right">
+                <a asp-action="CreateHotel" asp-controller="Seller" data-toggle="tooltip" title="Add New" data-placement="bottom">
+                    <i class="fas fa-plus fa-2x text-muted"></i>
+                </a>
+            </div>
+        </div>
+    </div>
+    <div class="card-body col-lg-12">
+        <table id="hotelTable" class="table table-hover table-responsive-md">
+            <thead>
+                <tr>
+                    <th></th>
+                    <th></th>
+                    <th></th>
+                    <th></th>
+                    <th>Hotel Code</th>
+                    <th>Hotel Name</th>
+                    <th>Address</th>
+                    <th>Region</th>
+                    <th>Created Date</th>
+                    <th>Created Ip Address</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var hotel in Model)
+                {
+                    string bgColor = hotel.Status == Convert.ToBoolean(Domain.Enums.Status.Active) ? "success" : "danger";
+                <tr class="@bgColor">
+                    <td>
+                        <a asp-action="EditHotel" asp-controller="Seller" asp-area="Dashboard" asp-route-id=@hotel.Id class="text-success" data-toggle="tooltip" title="Edit" data-placement="bottom">
+                            <i class="far fa-edit text-primary"></i>
+                        </a>
+                    </td>
+                    <td>
+                        @if (hotel.Status == Convert.ToBoolean(Domain.Enums.Status.Active))
+                        {
+                            <a asp-action="DeleteHotel" asp-controller="Seller" asp-area="Dashboard" asp-route-id=@hotel.Id data-toggle="tooltip" title="Delete" data-placement="bottom" class="delete">
+                                <i class="far fa-trash-alt text-danger"></i>
+                            </a>
+                        }
+                    </td>
+                    <td>
+                        <a asp-action="HotelDetails" asp-controller="Seller" asp-area="Dashboard" asp-route-id=@hotel.Id data-toggle="tooltip" title="Details" data-placement="bottom">
+                            <i class="fas fa-bars text-secondary"></i>
+                        </a>
+                    </td>
+                    <td style="width:10%;">
+                        <img src="~/images/hotelImage/@hotel.ProfilePhotoPath" alt="@hotel.HotelName" class="card-img" />
+                    </td>
+                    <td>@hotel.HotelCode</td>
+                    <td>@hotel.HotelName</td>
+                    <td>@hotel.Address</td>
+                    <td>@hotel.Region.RegionName</td>
+                    <td>@hotel.AddedDate.ToShortDateString()</td>
+                    <td>@hotel.CreatedIpAddress</td>
+                </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>
+
+@section scripts{
+    <script>
+
+        $(document).ready(function () {
+
+            $('#hotelTable').DataTable();
+
+            $(".delete").click(function (e) {
+
+                var isOK = confirm("Are you sure you want to delete?")            
+                if (!isOK) {
+                    e.preventDefault();
+                }
+            });
+        });
+    </script>
+
+}
+

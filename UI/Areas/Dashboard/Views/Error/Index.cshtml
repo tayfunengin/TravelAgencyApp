@@ -1,0 +1,40 @@
+﻿@model Exception
+@{
+    ViewData["Title"] = "Hata";
+    Layout = "~/Areas/Dashboard/Views/Shared/_DashboardLayout.cshtml";
+}
+
+<div class="card">
+    <div class="card-header">
+        <h5>An error has occurred!</h5>
+    </div>
+    <div class="card-body">
+        <div class="alert alert-danger">
+            @Model.Message
+        </div>
+    </div>
+    <div class="card-footer">
+        <a asp-action="Index" asp-controller="Home" asp-area="Dashboard" class="btn btn-default">Return Home Page</a>
+    </div>
+</div>
+
+
+@section scripts{
+
+    <script>
+
+        $(function () {
+
+            $(".btn").on("click", function () {
+
+                var parentid = "Definitions"
+                var id = $(this).parents(".row").attr('id');
+                sessionStorage.setItem("parentid", "");
+                sessionStorage.setItem("id", "");
+            });
+        });
+
+    </script>
+
+}
+

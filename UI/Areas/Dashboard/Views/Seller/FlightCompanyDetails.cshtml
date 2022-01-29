@@ -1,0 +1,251 @@
+﻿@model FlightCompany
+@{
+    Layout = "~/Areas/Dashboard/Views/Shared/_DashboardLayout.cshtml";
+}
+
+<div class="card">
+    <div class="card-header col-lg-12">
+        <div class="row">
+            <div class="col-md-9">
+                <h4>@Model.FlightCompanyName - Details</h4>
+            </div>
+            <div class="col-md-3 text-right">
+                <a href="/Dashboard/Seller/FlightCompanyList" data-toggle="tooltip" title="Go Back" data-placement="bottom" class="back">
+                    <i class="fas fa-arrow-left fa-2x text-muted"></i>
+                </a>
+            </div>
+        </div>
+    </div>
+    <div class="card-body col-lg-12">
+        <ul class="nav nav-tabs" id="myTab" role="tablist">
+            <li class="nav-item active" role="presentation">
+                <a data-toggle="tab" href="#region" class="nav-link active" id="region-tab" data-bs-toggle="tab" type="button" role="tab" aria-controls="region" aria-selected="true">Regions</a>
+            </li>
+            <li class="nav-item" role="presentation">
+                <a data-toggle="tab" href="#plane" class="nav-link" id="plane-tab" data-bs-toggle="tab" type="button" role="tab" aria-controls="plane" aria-selected="false">Planes</a>
+            </li>
+            <li class="nav-item" role="presentation">
+                <a data-toggle="tab" href="#route" class="nav-link" id="route-tab" data-bs-toggle="tab" type="button" role="tab" aria-controls="route" aria-selected="false">Routes</a>
+            </li>
+            <li class="nav-item" role="presentation">
+                <a data-toggle="tab" href="#flightPrice" class="nav-link" id="flightPrice-tab" data-bs-toggle="tab" type="button" role="tab" aria-controls="flightPrice" aria-selected="false">Prices</a>
+            </li>
+        </ul>
+        <div class="tab-content" id="myTabContent">
+            <div class="tab-pane fade show active" id="region" role="tabpanel" aria-labelledby="region-tab">
+                <div class="row my-3">
+                    <div class="col-md-9">
+                        <h5>Region List</h5>
+                    </div>
+                    <div class="col-md-3 text-right">
+                        <a asp-action="AddRegionToFlightCompany" asp-controller="Seller" asp-route-id="@Model.Id" data-toggle="tooltip" title="Add New" data-placement="bottom" class="add">
+                            <i class="fas fa-plus fa-2x text-muted"></i>
+                        </a>
+                    </div>
+                </div>
+                <table id="regionFlightCompanyTable" class="table table-hover table-responsive-md">
+                    <thead>
+                        <tr>
+                            <th></th>
+                            <th>Region Name</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var region in Model.Regions)
+                        {
+                            string bgColor = region.Status == Convert.ToBoolean(Domain.Enums.Status.Active) ? "success" : "danger";
+                            <tr class="@bgColor">
+                                <td>
+                                    @if (region.Status == Convert.ToBoolean(Domain.Enums.Status.Active) && Model.Status == Convert.ToBoolean(Domain.Enums.Status.Active))
+                                    {
+                                        <a asp-action="RemoveRegionFromFlightCompany" asp-controller="Seller" asp-area="Dashboard" asp-route-regionId=@region.Id asp-route-flightCompanyId="@Model.Id" data-toggle="tooltip" title="Delete" data-placement="bottom" class="delete">
+                                            <i class="far fa-trash-alt text-danger"></i>
+                                        </a>
+                                    }
+                                </td>
+                                <td>@region.RegionName</td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+            <div class="tab-pane fade" id="plane" role="tabpanel" aria-labelledby="plane-tab">
+                <div class="row my-3">
+                    <div class="col-md-9">
+                        <h5>Plane List</h5>
+                    </div>
+                    <div class="col-md-3 text-right">
+                        <a asp-action="AddPlaneToFlightCompany" asp-controller="Seller" asp-route-id="@Model.Id" data-toggle="tooltip" title="Add New" data-placement="bottom" class="add">
+                            <i class="fas fa-plus fa-2x text-muted"></i>
+                        </a>
+                    </div>
+                </div>
+                <table id="planeFlightCompanyTable" class="table table-hover table-responsive-md">
+                    <thead>
+                        <tr>
+                            <th></th>
+                            <th>Brand</th>
+                            <th>Model</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var plane in Model.Planes)
+                        {
+                            string bgColor = plane.Status == Convert.ToBoolean(Domain.Enums.Status.Active) ? "success" : "danger";
+                            <tr class="@bgColor">
+                                <td>
+                                    @if (plane.Status == Convert.ToBoolean(Domain.Enums.Status.Active) && Model.Status == Convert.ToBoolean(Domain.Enums.Status.Active))
+                                    {
+                                        <a asp-action="RemovePlaneFromFlightCompany" asp-controller="Seller" asp-area="Dashboard" asp-route-planeId=@plane.Id asp-route-flightCompanyId="@Model.Id" data-toggle="tooltip" title="Delete" data-placement="bottom" class="delete">
+                                            <i class="far fa-trash-alt text-danger"></i>
+                                        </a>
+                                    }
+                                </td>
+                                <td>@plane.Brand</td>
+                                <td>@plane.Model</td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="tab-pane fade" id="route" role="tabpanel" aria-labelledby="route-tab">
+                <div class="row my-3">
+                    <div class="col-md-9">
+                        <h5>Route List</h5>
+                    </div>
+                    <div class="col-md-3 text-right">
+                        <a asp-action="AddRouteToFlightCompany" asp-controller="Seller" asp-route-id="@Model.Id" data-toggle="tooltip" title="Add New" data-placement="bottom" class="add">
+                            <i class="fas fa-plus fa-2x text-muted"></i>
+                        </a>
+                    </div>
+                </div>
+                <table id="routeFlightCompanyTable" class="table table-hover table-responsive-md">
+                    <thead>
+                        <tr>
+                            <th></th>
+                            <th>Code</th>
+                            <th>Description</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var route in Model.Routes)
+                        {
+                            string bgColor = route.Status == Convert.ToBoolean(Domain.Enums.Status.Active) ? "success" : "danger";
+                            <tr class="@bgColor">
+                                <td>
+                                    @if (route.Status == Convert.ToBoolean(Domain.Enums.Status.Active) && Model.Status == Convert.ToBoolean(Domain.Enums.Status.Active))
+                                    {
+                                        <a asp-action="RemoveRouteFromFlightCompany" asp-controller="Seller" asp-area="Dashboard" asp-route-routeId=@route.Id asp-route-flightCompanyId="@Model.Id" data-toggle="tooltip" title="Delete" data-placement="bottom" class="delete">
+                                            <i class="far fa-trash-alt text-danger"></i>
+                                        </a>
+                                    }
+                                </td>
+                                <td>@route.RouteCode</td>
+                                <td>@route.Description</td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="tab-pane fade" id="flightPrice" role="tabpanel" aria-labelledby="flightPrice-tab">
+                <div class="row my-3">
+                    <div class="col-md-9">
+                        <h5>Price List</h5>
+                    </div>
+                    <div class="col-md-3 text-right">
+                        <a asp-action="CreateFlightPrice" asp-controller="Price" asp-route-companyId="@Model.Id" data-toggle="tooltip" title="Add New" data-placement="bottom" class="add">
+                            <i class="fas fa-plus fa-2x text-muted"></i>
+                        </a>
+                    </div>
+                </div>
+                <table id="flightPriceTable" class="table table-hover table-responsive-md">
+                    <thead>
+                        <tr>
+                            <th></th>
+                            <th></th>
+                            <th>Route Code</th>
+                            <th>Description</th>
+                            <th>Plane</th>
+                            <th>Period</th>
+                            <th>Year</th>
+                            <th>Purchase Price</th>
+                            <th>Sale Price</th>
+                            <th>Created Date</th>
+                            <th>Created Ip Address</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var price in Model.Prices)
+                        {
+                            string bgColor = price.Status == Convert.ToBoolean(Domain.Enums.Status.Active) ? "success" : "danger";
+                        <tr class="@bgColor">
+                            <td>
+                                <a asp-action="EditFlightPrice" asp-controller="Price" asp-area="Dashboard" asp-route-id=@price.Id class="text-success edit" data-toggle="tooltip" title="Edit" data-placement="bottom">
+                                    <i class="far fa-edit text-primary"></i>
+                                </a>
+                            </td>
+                            <td>
+                                @if (price.Status == Convert.ToBoolean(Domain.Enums.Status.Active))
+                                {
+                                    <a asp-action="DeleteFlightPrice" asp-controller="Price" asp-area="Dashboard" asp-route-id=@price.Id data-toggle="tooltip" title="Delete" data-placement="bottom" class="delete">
+                                        <i class="far fa-trash-alt text-danger"></i>
+                                    </a>
+                                }
+                            </td>
+                            <td>@price.Route.RouteCode</td>
+                            <td>@price.Route.Description</td>
+                            <td>@price.Plane.Model</td>
+                            <td>@price.Period</td>
+                            <td>@price.Year</td>
+                            <td>@price.PurchasePrice &euro;</td>
+                            <td>@price.SalePrice &euro;</td>
+                            <td>@price.AddedDate.ToShortDateString()</td>
+                            <td>@price.CreatedIpAddress</td>
+                        </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>       
+    </div>
+</div>
+
+@section scripts{
+    <script>
+
+        $(document).ready(function () {
+
+            $('#regionFlightCompanyTable').DataTable();
+            $('#planeFlightCompanyTable').DataTable();
+            $('#routeFlightCompanyTable').DataTable();
+            $('#flightPriceTable').DataTable();            
+            
+            $(".delete").click(function (e) {
+
+                var isOK = confirm("Listeden kaldırmak istediğinize emin misiniz?")
+                if (!isOK) {
+                    e.preventDefault();
+                }
+                sessionStorage.setItem("parentid", "Sellers");
+                sessionStorage.setItem("id", "FlightCompany");
+            });
+            $(".add").click(function () {              
+                sessionStorage.setItem("parentid", "Sellers");
+                sessionStorage.setItem("id", "FlightCompany");
+            });
+            $(".back").click(function () {
+                sessionStorage.setItem("parentid", "Sellers");
+                sessionStorage.setItem("id", "FlightCompany");
+            });
+            $(".edit").click(function () {
+                sessionStorage.setItem("parentid", "Sellers");
+                sessionStorage.setItem("id", "FlightCompany");
+            });
+        });
+
+    </script>
+}
+
+

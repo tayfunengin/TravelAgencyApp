@@ -1,0 +1,13 @@
+﻿
+.success{
+        
+    background-color:rgb(180,237,154) !important;
+}
+
+.danger {
+    background-color:rgb(255,122,122) !important;
+}
+
+img.hotelGalleryPhoto {
+    object-fit: contain;
+}

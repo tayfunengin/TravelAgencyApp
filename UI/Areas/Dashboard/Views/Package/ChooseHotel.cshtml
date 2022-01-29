@@ -1,0 +1,76 @@
+﻿@model IEnumerable<HotelPrice>
+@{
+    Layout = "~/Areas/Dashboard/Views/Shared/_DashboardLayout.cshtml";
+}
+
+<div class="card">
+    <div class="card-header col-lg-12">
+        <div class="row">
+            <div class="col-md-9">
+                <h4>Hotel Price List</h4>
+            </div>
+            <div class="col-md-3 text-right">
+                <a href="@TempData["referer"]" data-toggle="tooltip" title="Go Back" data-placement="bottom">
+                    <i class="fas fa-arrow-left fa-2x text-muted"></i>
+                    </a>
+             </div>
+        </div>
+    </div>
+    <div class="card-body col-lg-12">
+        <table id="priceTable" class="table table-hover table-responsive-md">
+            <thead>
+                <tr>
+                    <th>Hotel Name</th>
+                    <th>Region</th>
+                    <th>Accomodation Type</th>
+                    <th>Room Location</th>
+                    <th>Room Type</th>
+                    <th>Year</th>
+                    <th>Period</th>
+                    <th>Room Price(Eur)</th>
+                    <th> </th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var price in Model)
+                {
+                    <tr>
+                        <td>@price.Hotel.HotelName</td>
+                        <td>@price.Hotel.Region.RegionName</td>
+                        <td>@price.AccomodationType.Description</td>
+                        <td>@price.RoomLocation.RoomLocationCode</td>
+                        <td>@price.RoomType.RoomTypeCode</td>
+                        <td>@price.Year</td>
+                        <td>@price.Period</td>
+                        <td>@price.SalePrice</td>
+                        <td>
+                            <a asp-action="AddHotelPriceToPackage" asp-controller="Package" asp-area="Dashboard" asp-route-id=@price.Id data-toggle="tooltip" title="Choose" data-placement="bottom" class="add">
+                                <i class="far fa-check-circle text-success"></i>
+                            </a>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>
+
+@section scripts{
+    <script>
+
+        $(document).ready(function () {
+
+            $('#priceTable').DataTable();
+
+            $(".add").click(function () {
+                sessionStorage.setItem("parentid", "Packages");
+                sessionStorage.setItem("id", "Package");
+            });
+   
+        });
+    </script>
+
+}
+
+
+

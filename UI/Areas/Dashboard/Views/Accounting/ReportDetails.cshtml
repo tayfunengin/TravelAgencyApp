@@ -1,0 +1,73 @@
+﻿@model List<AccountBalance>
+@{
+    Layout = "~/Areas/Dashboard/Views/Shared/_DashboardLayout.cshtml";
+
+    Sales sales = ViewBag.sales as Sales;
+
+    decimal totalDept = 0;
+    decimal totalCredit = 0;
+    double totalBalance = 0;
+
+}
+
+<div class="card">
+    <div class="card-header col-lg-12">
+        <div class="row">
+            <div class="col-md-8">
+                <h4>Sales Report - Sales Date: @sales.SalesDate.ToShortDateString() Sales Code: @sales.SalesCode</h4>
+            </div>
+            <div class="col-md-4 text-right">
+                <div class="row float-right">
+                    <div>
+                        <a href=" @TempData["referer"]" data-toggle="tooltip" title="Go Back" data-placement="bottom" class="back">
+                            <i class="fas fa-arrow-left fa-2x text-muted"></i>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="card-body">
+        <table id="accountBalanceTable" class="table table-hover table-responsive-md">
+            <thead>
+                <tr>
+                    <th>Current Balance Code</th>
+                    <th>Debit Balance</th>
+                    <th>Credit Balance</th>
+                    <th>Balance</th>
+                </tr>
+            </thead>
+            <tbody>
+
+                @foreach (var account in Model)
+                {
+                    totalDept += account.CurrentDept;
+                    totalCredit += account.CurrentCredit;
+                    totalBalance = Convert.ToDouble(totalDept - totalCredit);
+                    <tr>
+                        <td>@account.AccountName</td>
+                        <td>@account.CurrentDept &#x20BA;</td>
+                        <td>@account.CurrentCredit &#x20BA;</td>
+                        <td> @Convert.ToDouble( (@account.CurrentDept - @account.CurrentCredit) ) &#x20BA;</td>
+                    </tr>
+                }
+                <tr>
+                    <td>Total</td>
+                    <td>@totalDept &#x20BA;</td>
+                    <td>@totalCredit &#x20BA;</td>
+                    @if (totalBalance > 0)
+                    {
+                        <td class="text-success">@totalBalance &#x20BA;</td>
+                    }
+                    else
+                    {
+                        <td class="text-danger">@totalBalance &#x20BA;</td>
+                    }
+                </tr>
+            </tbody>
+        </table>
+
+    </div>
+
+</div>

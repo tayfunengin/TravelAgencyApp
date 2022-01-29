@@ -1,0 +1,162 @@
+﻿@model RentACarCompany 
+@{    
+    Layout = "~/Areas/Dashboard/Views/Shared/_DashboardLayout.cshtml";
+}
+
+<div class="card">
+    <div class="card-header col-lg-12">
+        <div class="row">
+            <div class="col-md-9">
+                <h4>@Model.RentACarCompanyName - Details</h4>
+            </div>
+            <div class="col-md-3 text-right">
+                <a href="/dashboard/Seller/RentACarCompanyList" data-toggle="tooltip" title="Go Back" data-placement="bottom" class="back">
+                    <i class="fas fa-arrow-left fa-2x text-muted"></i>
+                </a>
+            </div>
+        </div>
+    </div>
+    <div class="card-body col-lg-12">
+        <ul class="nav nav-tabs" id="myTab" role="tablist">
+            <li class="nav-item active" role="presentation">
+                <a data-toggle="tab" href="#car" class="nav-link active" id="car-tab" data-bs-toggle="tab" type="button" role="tab" aria-controls="car" aria-selected="true">Cars</a>
+            </li>
+            <li class="nav-item" role="presentation">
+                <a data-toggle="tab" href="#rentACarPrice" class="nav-link" id="rentACarPrice-tab" data-bs-toggle="tab" type="button" role="tab" aria-controls="rentACarPrice" aria-selected="false">Prices</a>
+            </li>
+        </ul>
+        <div class="tab-content" id="myTabContent">
+            <div class="tab-pane fade show active" id="car" role="tabpanel" aria-labelledby="car-tab">
+                <div class="row my-3">
+                    <div class="col-md-9">
+                        <h5>Car List</h5>
+                    </div>
+                    <div class="col-md-3 text-right">
+                        <a asp-action="AddCarToRentACarCompany" asp-controller="Seller" asp-route-id="@Model.Id" data-toggle="tooltip" title="Add New" data-placement="bottom" class="add">
+                            <i class="fas fa-plus fa-2x text-muted"></i>
+                        </a>
+                    </div>
+                </div>
+                <table id="carRentACarCompanyTable" class="table table-hover table-responsive-md">
+                    <thead>
+                        <tr>                     
+                            <th></th>
+                            <th>Car Brand</th>
+                            <th>Car Model</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var car in Model.Cars)
+                        {
+                            string bgColor = car.Status == Convert.ToBoolean(Domain.Enums.Status.Active) ? "success" : "danger";
+                            <tr class="@bgColor">
+                                <td>
+                                    @if (car.Status == Convert.ToBoolean(Domain.Enums.Status.Active) && Model.Status == Convert.ToBoolean(Domain.Enums.Status.Active))
+                                    {
+                                        <a asp-action="RemoveCarFromRentACarCompany" asp-controller="Seller" asp-area="Dashboard" asp-route-carId=@car.Id asp-route-rentACarCompanyId="@Model.Id" data-toggle="tooltip" title="Delete" data-placement="bottom" class="delete">
+                                            <i class="far fa-trash-alt text-danger"></i>
+                                        </a>
+                                    }
+                                </td>
+                                <td>@car.Brand</td>
+                                <td>@car.Model</td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="tab-pane fade" id="rentACarPrice" role="tabpanel" aria-labelledby="rentACarPrice-tab">
+                <div class="row my-3">
+                    <div class="col-md-9">
+                        <h5>Price List</h5>
+                    </div>
+                    <div class="col-md-3 text-right">
+                        <a asp-action="CreateRentACarPrice" asp-controller="Price" asp-route-companyId="@Model.Id" data-toggle="tooltip" title="Add New" data-placement="bottom" class="add">
+                            <i class="fas fa-plus fa-2x text-muted"></i>
+                        </a>
+                    </div>
+                </div>
+                <table id="rentACarPriceTable" class="table table-hover table-responsive-md">
+                    <thead>
+                        <tr>
+                            <th></th>
+                            <th></th>
+                            <th>Car Brand</th>
+                            <th>Car Model</th>
+                            <th>Period</th>
+                            <th>Year</th>
+                            <th>Purchase Price</th>
+                            <th>Sale Price</th>
+                            <th>Created Date</th>
+                            <th>Created Ip Address</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var price in Model.Prices)
+                        {
+                            string bgColor = price.Status == Convert.ToBoolean(Domain.Enums.Status.Active) ? "success" : "danger";
+                        <tr class="@bgColor">
+                            <td>
+                                <a asp-action="EditRentACarPrice" asp-controller="Price" asp-area="Dashboard" asp-route-id=@price.Id class="text-success edit" data-toggle="tooltip" title="Edit" data-placement="bottom">
+                                    <i class="far fa-edit text-primary"></i>
+                                </a>
+                            </td>
+                            <td>
+                                @if (price.Status == Convert.ToBoolean(Domain.Enums.Status.Active))
+                                {
+                                    <a asp-action="DeleteRentACarPrice" asp-controller="Price" asp-area="Dashboard" asp-route-id=@price.Id data-toggle="tooltip" title="Delete" data-placement="bottom" class="delete">
+                                        <i class="far fa-trash-alt text-danger"></i>
+                                    </a>
+                                }
+                            </td>
+                            <td>@price.Car.Brand</td>
+                            <td>@price.Car.Model</td>
+                            <td>@price.Period</td>
+                            <td>@price.Year</td>
+                            <td>@price.PurchasePrice</td>
+                            <td>@price.SalePrice</td>
+                            <td>@price.AddedDate.ToShortDateString()</td>
+                            <td>@price.CreatedIpAddress</td>
+                        </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section scripts{
+    <script>
+
+        $(document).ready(function () {
+
+            $('#carRentACarCompanyTable').DataTable();    
+            $('#rentACarPriceTable').DataTable();               
+
+            $(".delete").click(function (e) {
+
+                var isOK = confirm("Listeden kaldırmak istediğinize emin misiniz?")
+                if (!isOK) {
+                    e.preventDefault();
+                }
+                sessionStorage.setItem("parentid", "Sellers");
+                sessionStorage.setItem("id", "RentACarCompany");
+            });
+            $(".add").click(function () {
+                sessionStorage.setItem("parentid", "Sellers");
+                sessionStorage.setItem("id", "RentACarCompany");
+            });
+            $(".back").click(function () {
+                sessionStorage.setItem("parentid", "Sellers");
+                sessionStorage.setItem("id", "RentACarCompany");
+            });
+            $(".edit").click(function () {
+                sessionStorage.setItem("parentid", "Sellers");
+                sessionStorage.setItem("id", "RentACarCompany");
+            });
+        });
+
+    </script>
+}

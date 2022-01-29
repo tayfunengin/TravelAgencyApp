@@ -1,0 +1,240 @@
+﻿@model Package
+@{
+    Layout = "~/Areas/Dashboard/Views/Shared/_DashboardLayout.cshtml";
+    int photoCount = 0;
+}
+
+<div class="container">
+
+    <div class="row">
+        <div class="col-md-6">
+            <div class="row">
+                <div class="col-md-3">
+                    @if (Model.Quota > 0)
+                    {
+                        <a asp-action="Purchase" asp-controller="Sales" asp-area="Dashboard" asp-route-id="@Model.Id" class="btn btn-outline-primary add">Purchase</a>
+                    }
+                </div>
+                <div class="col-md-9 text-right">
+                    @if (Model.Quota > 0)
+                    {
+                        @if (Model.RentACarPriceId == null)
+                        {
+                            <a asp-action="AddRentACar" asp-controller="Sales" asp-area="Dashboard" asp-route-id="@Model.Id" class="btn btn-outline-success btn-sm add">Add Rental Car</a>
+                        }
+                        else
+                        {
+                            <a asp-action="RemoveRentalCar" asp-controller="Sales" asp-area="Dashboard" asp-route-rentACarPriceId="@Model.RentACarPriceId" asp-route-packageId="@Model.Id" class="btn btn-outline-danger btn-sm add">Remove Rental Car</a>
+                        }
+                        @if (Model.TourGuidePriceId == null)
+                        {
+                            <a asp-action="AddTourGuide" asp-controller="Sales" asp-area="Dashboard" asp-route-id="@Model.Id" class="btn btn-outline-success btn-sm add">Add Tour Guide</a>
+                        }
+                        else
+                        {
+                            <a asp-action="RemoveTourGuide" asp-controller="Sales" asp-area="Dashboard" asp-route-tourGuidePriceId="@Model.TourGuidePriceId" asp-route-packageId="@Model.Id" class="btn btn-outline-danger btn-sm add">Remove Tour Guide</a>
+                        }
+                    }
+
+                </div>
+            </div>
+
+            <div class="card bg-light">
+                <div class="card-header">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <span>Package Details</span>
+                        </div>
+                        <div class="col-md-6 text-right">
+                            @Model.Total &euro; - @TempData["totalTl"] TL
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card-body">
+
+                <table class="table table-hover">
+                    <tbody>
+
+                        <tr>
+                            <th>Hotel Name:</th>
+                            <td colspan="3">@Model.HotelPrice.Hotel.HotelName</td>
+                        </tr>
+                        <tr>
+                            <th>Check-in:</th>
+                            <td>@Model.CheckInDate.ToShortDateString()</td>
+                            <th>Check-out:</th>
+                            <td>@Model.CheckOutDate.ToShortDateString()</td>
+                        </tr>
+                        <tr>
+                            <th>Accomodation:</th>
+                            <td>@Model.HotelPrice.AccomodationType.Description</td>
+                            <th>Room Type:</th>
+                            <td>@Model.HotelPrice.RoomType.Description</td>
+                        </tr>
+
+                        <tr>
+                            <th>Room Location:</th>
+                            <td colspan="3">@Model.HotelPrice.RoomLocation.Description</td>
+                        </tr>
+                        <tr class="text-center">
+                            <th colspan="4">Tours</th>
+                        </tr>
+                        @foreach (var tour in Model.TourPrices)
+                        {
+                            <tr>
+
+                                @foreach (var tourDate in Model.TourDates)
+                                {
+                                    if (tourDate.TourPriceId == tour.Id)
+                                    {
+                                        <td> @tourDate.TourDate.ToShortDateString()</td>
+                                        break;
+                                    }
+                                }
+                                <td colspan="3">@tour.Tour.TourName</td>
+                            </tr>
+
+                        }
+                        <tr class="text-center">
+                            <th colspan="4">
+                                Flights
+                            </th>
+                        </tr>
+                        @foreach (var flight in Model.FlightPrices)
+                        {
+                            <tr>
+                                <td>@flight.FlightCompany.FlightCompanyName</td>
+                                <td>@flight.Plane.Model</td>
+                                <td colspan="2">@flight.Route.Description</td>
+                            </tr>
+                        }
+
+                        @if (Model.RentACarPrice != null)
+                        {
+                            <tr class="text-center">
+                                <th colspan="4">
+                                    Rental Car
+                                </th>
+                            </tr>
+                            <tr>
+                                <th>Start Date:</th>
+                                <td>@Model.RentACarStartDate.Value.ToShortDateString()</td>
+                                <th>End Date:</th>
+                                <td>@Model.RentACarEndDate.Value.ToShortDateString()</td>
+                            </tr>
+                            <tr>
+                                <th>Brand:</th>
+                                <td>@Model.RentACarPrice.Car.Brand</td>
+                                <th>Model:</th>
+                                <td>@Model.RentACarPrice.Car.Model</td>
+                            </tr>
+                        }
+                        @if (Model.TourGuidePrice != null)
+                        {
+                            <tr class="text-center">
+                                <th colspan="4">
+                                    Tour Guide
+                                </th>
+                            </tr>
+                            <tr>
+                                <td>@Model.TourGuideRentDay.Value.ToShortDateString()</td>
+                                <td>@Model.TourGuidePrice.TourGuide.TourGuideName</td>
+                                <td>@Model.TourGuidePrice.TourGuide.TourGuideSurname</td>
+                                <td>@Model.TourGuidePrice.TourGuide.Language</td>
+                            </tr>
+
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+
+        <div class="col-md-6">
+            <div class="row mb-1">
+                <div class="col-md-9">
+
+                </div>
+                <div class="col-md-3 text-right">
+                    <a href="/Dashboard/Sales/PackageList" data-toggle="tooltip" title="Go Back" data-placement="bottom" class="back">
+                        <i class="fas fa-arrow-left fa-2x text-muted"></i>
+                    </a>
+                </div>
+            </div>
+            <div class="card bg-dark text-light">
+                <div class="card-header">
+                    <h4>Hotel Gallery</h4>
+                </div>
+                <div class="card-body">
+                    <div id="carouselHotel" class="carousel slide" data-ride="carousel">
+                        <div class="carousel-inner w-100">
+
+                            @if (Model.HotelPrice.Hotel.Photographies.Count > 0)
+                            {
+                                @foreach (var photo in Model.HotelPrice.Hotel.Photographies)
+                                {
+                                    photoCount += 1;
+
+                                    @if (photoCount == 1)
+                                    {
+                                        <div class="carousel-item active">
+                                            <img class="d-block active" src="/images/hotelImage/@photo.Path" alt="" style="height:450px;width:100%; object-fit:contain;">
+
+                                        </div>
+                                    }
+                                    else
+                                    {
+                                        <div class="carousel-item">
+                                            <img class="d-block " src="/images/hotelImage/@photo.Path" alt="" style="height:450px;width:100%; object-fit:contain;">
+                                        </div>
+                                    }
+                                }
+                            }
+                            else
+                            {
+                                <div class="carousel-item">
+                                    <img class="d-block active" src="/images/hotelImage/@Model.HotelPrice.Hotel.ProfilePhotoPath" alt="" style="height:450px;width:100%; object-fit:contain;">
+                                </div>
+                            }
+                        </div>
+                        <a class="carousel-control-prev" href="#carouselHotel" role="button" data-slide="prev">
+                            <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                            <span class="sr-only">Previous</span>
+                        </a>
+                        <a class="carousel-control-next" href="#carouselHotel" role="button" data-slide="next">
+                            <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                            <span class="sr-only">Next</span>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+
+@section scripts{
+    <script>
+
+        $(document).ready(function () {
+
+            $(".delete").click(function (e) {
+
+                var isOK = confirm("Are you sure you want to remove it from the list??")
+                if (!isOK) {
+                    e.preventDefault();
+                }
+                sessionStorage.setItem("parentid", "SalesAgents");
+                sessionStorage.setItem("id", "SalesAgent");
+            });
+            $(".back").click(function () {
+                sessionStorage.setItem("parentid", "SalesAgents");
+                sessionStorage.setItem("id", "SalesAgent");
+            });
+        });
+
+    </script>
+}

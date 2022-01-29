@@ -1,0 +1,350 @@
+﻿@model Sales 
+@using Domain.Enums;
+@{
+    Layout = "~/Areas/Dashboard/Views/Shared/_DashboardLayout.cshtml";
+    decimal totalFlight = 0;
+    double totalFlightTl = 0;
+    decimal totalTransportation = 0;
+    double totalTransportationTl = 0;
+    decimal totalTours = 0;
+    double totalToursTl = 0;
+}
+
+<div class="card">
+    <div class="card-header col-lg-12">
+        <div class="row">
+            <div class="col-md-9">
+                <table class="table">
+                    <tbody>
+                        <tr>
+                            <th>Sales Code :</th>
+                            <td>@Model.SalesCode</td>
+                            <th>Package Name :</th>
+                            <td>@Model.Package.PackageName</td>
+                        </tr>
+                        <tr>
+                            <th>Sales Date:</th>
+                            <td>@Model.SalesDate.ToShortDateString()</td>
+                            <th>Sold To :</th>
+                            <td>@Model.Customer.Name @Model.Customer.Surname</td>
+                        </tr>
+                        <tr>
+                            <th>Period :</th>
+                            <td>@Model.Package.Period</td>
+                            <th>Total Price :</th>
+                            <td>@Model.SalesAmount &#x20BA;</td>
+                        </tr>                       
+                    </tbody>
+                </table>
+            </div>
+            <div class="col-md-3 text-right">
+                <a href="@TempData["referer"]" data-toggle="tooltip" title="Go Back" data-placement="bottom" class="back">
+                    <i class="fas fa-arrow-left fa-2x text-muted"></i>
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="card-body col-lg-12">
+    <ul class="nav nav-tabs" id="myTab" role="tablist">
+        <li class="nav-item active" role="presentation">
+            <a data-toggle="tab" href="#hotel" class="nav-link active" id="hotel-tab" data-bs-toggle="tab" type="button" role="tab" aria-controls="hotel" aria-selected="true">Hotel</a>
+        </li>
+        <li class="nav-item" role="presentation">
+            <a data-toggle="tab" href="#flight" class="nav-link" id="flight-tab" data-bs-toggle="tab" type="button" role="tab" aria-controls="flight" aria-selected="false">Flight</a>
+        </li>
+        <li class="nav-item" role="presentation">
+            <a data-toggle="tab" href="#transportation" class="nav-link" id="transportation-tab" data-bs-toggle="tab" type="button" role="tab" aria-controls="transportation" aria-selected="false">Transportation</a>
+        </li>
+        <li class="nav-item" role="presentation">
+            <a data-toggle="tab" href="#tour" class="nav-link" id="tour-tab" data-bs-toggle="tab" type="button" role="tab" aria-controls="tour" aria-selected="false">Tour</a>
+        </li>
+        <li class="nav-item" role="presentation">
+            <a data-toggle="tab" href="#rentACar" class="nav-link" id="rentACar-tab" data-bs-toggle="tab" type="button" role="tab" aria-controls="rentACar" aria-selected="false">Rent A Car</a>
+        </li>
+        <li class="nav-item" role="presentation">
+            <a data-toggle="tab" href="#tourGuide" class="nav-link" id="tourGuide-tab" data-bs-toggle="tab" type="button" role="tab" aria-controls="tourGuide" aria-selected="false">Tour Guide</a>
+        </li>
+    </ul>
+    <div class="tab-content" id="myTabContent">
+        <div class="tab-pane fade show active" id="hotel" role="tabpanel" aria-labelledby="hotel-tab">
+            
+            <table id="" class="table table-hover table-responsive-md">
+                <thead>
+                    <tr>                 
+                        <th>Hotel Name</th>
+                        <th>AccomodationType</th>
+                        <th>Room Location</th>
+                        <th>Room Type</th>
+                        <th>Room Price</th>
+                        <th>Nights</th>
+                        <th>Total</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @if (Model.Package.HotelPrice != null)
+                    {
+                        decimal? totalEur = Model.Package.HotelPrice.SalePrice * Model.Package.NightCount;
+                        double? totalTL = Convert.ToDouble( totalEur * Model.CurrencyRate );
+                        <tr>                          
+                            <td>@Model.Package.HotelPrice.Hotel.HotelName</td>
+                            <td>@Model.Package.HotelPrice.AccomodationType.Description</td>
+                            <td>@Model.Package.HotelPrice.RoomLocation.Description</td>
+                            <td>@Model.Package.HotelPrice.RoomType.Description</td>
+                            <td>@Model.Package.HotelPrice.SalePrice &euro; - @Convert.ToDouble( Model.Package.HotelPrice.SalePrice * Model.CurrencyRate ) &#x20BA;</td>
+                            <td>@Model.Package.NightCount</td>
+                            <td>@totalEur &euro; - @totalTL &#x20BA;</td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+        <div class="tab-pane fade" id="flight" role="tabpanel" aria-labelledby="flight-tab">
+
+            <table id="" class="table table-hover table-responsive-md">
+                <thead>
+                    <tr>                  
+                        <th>Flight Company Name</th>
+                        <th>Plane</th>
+                        <th>Route</th>
+                        <th>Price Per Person</th>
+                        <th>Guest Count</th>
+                        <th>Sub Total</th>
+                        <th>Total</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @if (Model.Package.FlightPrices != null)
+                    {
+                        @foreach (var flight in Model.Package.FlightPrices)
+                        {
+                            decimal subtotal;
+                            subtotal = flight.SalePrice * Model.Package.GuestCount;
+                            totalFlight += subtotal;
+                            totalFlightTl = Convert.ToDouble( totalFlight * Model.CurrencyRate );
+                            <tr>                               
+                                <td>@flight.FlightCompany.FlightCompanyName</td>
+                                <td>@flight.Plane.Model</td>
+                                <td>@flight.Route.Description</td>
+                                <td>@flight.SalePrice &euro; - @Convert.ToDouble(flight.SalePrice * Model.CurrencyRate) &#x20BA;</td>
+                                <td>@Model.Package.GuestCount</td>
+                                <td>@subtotal &euro; - @Convert.ToDouble(subtotal * Model.CurrencyRate) &#x20BA;</td>
+                            </tr>
+                        }
+                        @if (totalFlight > 0)
+                        {
+                            <tr>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>                          
+                                <td>
+                                    @totalFlight &euro;- @totalFlightTl &#x20BA;
+                                </td>
+                            </tr>
+                        }
+                    }
+                </tbody>
+            </table>
+        </div>
+        <div class="tab-pane fade" id="transportation" role="tabpanel" aria-labelledby="transportation-tab">
+            <div class="row my-3">
+                <div class="col-md-9">
+                    <h5></h5>
+                </div>             
+            </div>
+            <table id="" class="table table-hover table-responsive-md">
+                <thead>
+                    <tr>                   
+                        <th>Transportation Company Name</th>
+                        <th>Route</th>
+                        <th>Price Per Person</th>
+                        <th>Guest Count</th>
+                        <th>Sub Total</th>
+                        <th>Total</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @if (Model.Package.TransportationPrices != null)
+                    {
+                        @foreach (var transportation in Model.Package.TransportationPrices)
+                        {
+                            decimal subtotal;
+                            subtotal = transportation.SalePrice * Model.Package.GuestCount;
+                            totalTransportation += subtotal;
+                            totalTransportationTl = Convert.ToDouble( totalTransportation * Model.CurrencyRate );
+                            <tr>                              
+                                <td>@transportation.TransportationCompany.TransportationCompanyName</td>
+                                <td>@transportation.Route.Description</td>
+                                <td>@transportation.SalePrice &euro; - @Convert.ToDouble(transportation.SalePrice * Model.CurrencyRate) &#x20BA;</td>
+                                <td>@Model.Package.GuestCount</td>
+                                <td>@subtotal &euro; - @Convert.ToDouble(subtotal * Model.CurrencyRate) &#x20BA; </td>
+                            </tr>
+                        }
+                        @if (totalTransportation > 0)
+                        {
+                            <tr>                           
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td>@totalTransportation &euro; - @totalTransportationTl &#x20BA;</td>
+                            </tr>
+                        }
+                    }
+
+                </tbody>
+            </table>
+        </div>
+
+        <div class="tab-pane fade" id="tour" role="tabpanel" aria-labelledby="tour-tab">
+
+            <table id="" class="table table-hover table-responsive-md">
+                <thead>
+                    <tr>                     
+                        <th>Tour Operator Name</th>
+                        <th>Tour Name</th>
+                        <th>Tour Date</th>
+                        <th>Price Per Person</th>
+                        <th>Guest Count</th>
+                        <th>Sub Total</th>
+                        <th>Total</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @if (Model.Package.TourPrices != null)
+                    {
+
+                        decimal subtotal;
+                        @foreach (var tourPrice in Model.Package.TourPrices)
+                        {
+                            subtotal = tourPrice.SalePrice * Model.Package.GuestCount;
+                            totalTours += subtotal;
+                            totalToursTl = Convert.ToDouble( totalTours * Model.CurrencyRate );
+                            <tr>                                
+                                <td>@tourPrice.TourOperator.TourOperatorName</td>
+                                <td>@tourPrice.Tour.TourName</td>
+
+                                @foreach (var tourDate in Model.Package.TourDates)
+                                {
+                                    if (tourDate.TourPriceId == tourPrice.Id && tourDate.Status == Convert.ToBoolean(Status.Active))
+                                    {
+                                        <td> @tourDate.TourDate.ToShortDateString()</td>
+                                        break;
+                                    }
+                                }
+
+                                <td>@tourPrice.SalePrice &euro; - @Convert.ToDouble(tourPrice.SalePrice * Model.CurrencyRate) &#x20BA;</td>
+                                <td>@Model.Package.GuestCount</td>
+                                <td>@subtotal &euro; - @Convert.ToDouble(subtotal * Model.CurrencyRate) &#x20BA;</td>
+                            </tr>
+                        }
+                        @if (totalTours > 0)
+                        {
+                            <tr>                             
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td>@totalTours &euro; - @totalToursTl &#x20BA;</td>
+                            </tr>
+                        }
+                    }
+
+                </tbody>
+            </table>
+        </div>
+        <div class="tab-pane fade" id="rentACar" role="tabpanel" aria-labelledby="rentACar-tab">
+
+            <table id="" class="table table-hover table-responsive-md">
+                <thead>
+                    <tr>           
+                        <th>Company Name</th>
+                        <th>Car Brand</th>
+                        <th>Car Model</th>
+                        <th>Price Per Day</th>
+                        <th>Start Date</th>
+                        <th>End Date</th>
+                        <th>Day Count</th>
+                        <th>Total</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @if (Model.RentACarPrice != null)
+                    {
+                        decimal? total = Model.RentACarPrice.SalePrice * Model.RentACarDayCount;
+                        double? totalTl = Convert.ToDouble( total * Model.CurrencyRate );
+                        <tr>                           
+                            <td>@Model.RentACarPrice.RentACarCompany.RentACarCompanyName</td>
+                            <td>@Model.RentACarPrice.Car.Brand</td>
+                            <td>@Model.RentACarPrice.Car.Model</td>
+                            <td>@Model.RentACarPrice.SalePrice &euro; - @Convert.ToDouble(Model.RentACarPrice.SalePrice * Model.CurrencyRate) &#x20BA;</td>
+                            <td>@Model.RentACarStartDate.Value.ToShortDateString()</td>
+                            <td>@Model.RentACarEndDate.Value.ToShortDateString()</td>
+                            <td>@Model.RentACarDayCount</td>
+                            <td>@total &euro; - @totalTl &#x20BA;</td>
+                        </tr>
+                    }
+
+                </tbody>
+            </table>
+        </div>
+        <div class="tab-pane fade" id="tourGuide" role="tabpanel" aria-labelledby="tourGuide-tab">
+
+            <table id="" class="table table-hover table-responsive-md">
+                <thead>
+                    <tr>                       
+                        <th>Name</th>
+                        <th>Surname</th>
+                        <th>Language</th>
+                        <th>Date</th>
+                        <th>Price</th>
+                        <th>Total</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @if (Model.TourGuidePrice != null)
+                    {
+                        decimal? total = Model.TourGuidePrice.SalePrice;
+                        double? totalTl = Convert.ToDouble( total * Model.CurrencyRate );
+                        <tr>                         
+                            <td>@Model.TourGuidePrice.TourGuide.TourGuideName</td>
+                            <td>@Model.TourGuidePrice.TourGuide.TourGuideSurname</td>
+                            <td>@Model.TourGuidePrice.TourGuide.Language</td>
+                            <td>@Model.TourGuideRentDay.Value.ToShortDateString()</td>
+                            <td>@Model.TourGuidePrice.SalePrice &euro; - @Convert.ToDouble(Model.TourGuidePrice.SalePrice * Model.CurrencyRate) &#x20BA;</td>
+                            <td>@total &euro; - @totalTl &#x20BA;</td>
+                        </tr>
+                    }
+
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+
+@section scripts{
+    <script>
+
+        $(document).ready(function () {
+
+            $(".delete").click(function (e) {
+              
+                sessionStorage.setItem("parentid", "SalesReports");
+                sessionStorage.setItem("id", "SalesReport");
+            });     
+            $(".back").click(function () {
+                sessionStorage.setItem("parentid", "SalesReports");
+                sessionStorage.setItem("id", "SalesReport");
+            });
+        });
+
+    </script>
+}
+

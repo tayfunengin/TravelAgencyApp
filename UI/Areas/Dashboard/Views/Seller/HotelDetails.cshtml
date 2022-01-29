@@ -1,0 +1,260 @@
+﻿@model Hotel
+@{
+    Layout = "~/Areas/Dashboard/Views/Shared/_DashboardLayout.cshtml";
+}
+
+<div class="card">
+    <div class="card-header col-lg-12">
+        <div class="row">
+            <div class="col-md-8">
+                <h4>@Model.HotelName - Details</h4>
+            </div>
+            <div class="col-md-4 text-right">
+                <div class="row float-right">
+                    <div class="mr-3">
+                        <a asp-action="HotelGallery" asp-controller="Seller" asp-route-id="@Model.Id" data-toggle="tooltip" title="Gallery" data-placement="bottom" class="back">
+                            <i class="fas fa-images fa-2x"></i>
+                        </a>
+                    </div>
+                    <div>
+                        <a href="/Dashboard/Seller/HotelList" data-toggle="tooltip" title="Go Back" data-placement="bottom" class="back">
+                            <i class="fas fa-arrow-left fa-2x text-muted"></i>
+                        </a>
+                    </div>
+                </div>         
+            </div>
+        </div>
+    </div>
+    <div class="card-body col-lg-12">
+        <ul class="nav nav-tabs" id="myTab" role="tablist">
+            <li class="nav-item active" role="presentation">
+                <a data-toggle="tab" href="#accomodationType" class="nav-link active" id="accomodationType-tab" data-bs-toggle="tab" type="button" role="tab" aria-controls="accomodationType" aria-selected="true">Accomodation Types</a>
+            </li>
+            <li class="nav-item" role="presentation">
+                <a data-toggle="tab" href="#roomType" class="nav-link" id="roomType-tab" data-bs-toggle="tab" type="button" role="tab" aria-controls="roomType" aria-selected="false">Room Types</a>
+            </li>
+            <li class="nav-item" role="presentation">
+                <a data-toggle="tab" href="#roomLocation" class="nav-link" id="roomLocation-tab" data-bs-toggle="tab" type="button" role="tab" aria-controls="roomLocation" aria-selected="false">Room Locations</a>
+            </li>
+            <li class="nav-item" role="presentation">
+                <a data-toggle="tab" href="#hotelPrice" class="nav-link" id="hotelPrice-tab" data-bs-toggle="tab" type="button" role="tab" aria-controls="hotelPrice" aria-selected="false">Prices</a>
+            </li>
+        </ul>
+        <div class="tab-content" id="myTabContent">
+            <div class="tab-pane fade show active" id="accomodationType" role="tabpanel" aria-labelledby="accomodationType-tab">
+                <div class="row my-3">
+                    <div class="col-md-9">
+                        <h5>Accomodation Type List</h5>
+                    </div>
+                    <div class="col-md-3 text-right">
+                        <a asp-action="AddAccomodationTypeToHotel" asp-controller="Seller" asp-route-id="@Model.Id" data-toggle="tooltip" title="Add New" data-placement="bottom" class="add">
+                            <i class="fas fa-plus fa-2x text-muted"></i>
+                        </a>
+                    </div>
+                </div>
+                <table id="accomodationTypeHotelTable" class="table table-hover table-responsive-md">
+                    <thead>
+                        <tr>
+                            <th></th>
+                            <th>AccomodationType Code</th>
+                            <th>AccomodationType Description</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var accType in Model.AccomodationTypes)
+                        {
+                            string bgColor = accType.Status == Convert.ToBoolean(Domain.Enums.Status.Active) ? "success" : "danger";
+                            <tr class="@bgColor">
+                                <td>
+                                    @if (accType.Status == Convert.ToBoolean(Domain.Enums.Status.Active) && Model.Status == Convert.ToBoolean(Domain.Enums.Status.Active))
+                                    {
+                                        <a asp-action="RemoveAccomodationTypeFromHotel" asp-controller="Seller" asp-area="Dashboard" asp-route-accTypeId=@accType.Id asp-route-hotelId="@Model.Id" data-toggle="tooltip" title="Delete" data-placement="bottom" class="delete">
+                                            <i class="far fa-trash-alt text-danger"></i>
+                                        </a>
+                                    }
+                                </td>
+                                <td>@accType.AccomodationCode</td>
+                                <td>@accType.Description</td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+            <div class="tab-pane fade" id="roomType" role="tabpanel" aria-labelledby="roomType-tab">
+                <div class="row my-3">
+                    <div class="col-md-9">
+                        <h5>Room Type List</h5>
+                    </div>
+                    <div class="col-md-3 text-right">
+                        <a asp-action="AddRoomTypeToHotel" asp-controller="Seller" asp-route-id="@Model.Id" data-toggle="tooltip" title="Add New" data-placement="bottom" class="add">
+                            <i class="fas fa-plus fa-2x text-muted"></i>
+                        </a>
+                    </div>
+                </div>
+                <table id="roomTypeHotelTable" class="table table-hover table-responsive-md">
+                    <thead>
+                        <tr>
+                            <th></th>
+                            <th>Room Type Code</th>
+                            <th>Room Type Description</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var roomType in Model.RoomTypes)
+                        {
+                            string bgColor = roomType.Status == Convert.ToBoolean(Domain.Enums.Status.Active) ? "success" : "danger";
+                            <tr class="@bgColor">
+                                <td>
+                                    @if (roomType.Status == Convert.ToBoolean(Domain.Enums.Status.Active) && Model.Status == Convert.ToBoolean(Domain.Enums.Status.Active))
+                                    {
+                                        <a asp-action="RemoveRoomTypeFromHotel" asp-controller="Seller" asp-area="Dashboard" asp-route-roomTypeId=@roomType.Id asp-route-hotelId="@Model.Id" data-toggle="tooltip" title="Delete" data-placement="bottom" class="delete">
+                                            <i class="far fa-trash-alt text-danger"></i>
+                                        </a>
+                                    }
+                                </td>
+                                <td>@roomType.RoomTypeCode</td>
+                                <td>@roomType.Description</td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+            <div class="tab-pane fade" id="roomLocation" role="tabpanel" aria-labelledby="roomLocation-tab">
+                <div class="row my-3">
+                    <div class="col-md-9">
+                        <h5>Room Location List</h5>
+                    </div>
+                    <div class="col-md-3 text-right">
+                        <a asp-action="AddRoomLocationToHotel" asp-controller="Seller" asp-route-id="@Model.Id" data-toggle="tooltip" title="Add New" data-placement="bottom" class="add">
+                            <i class="fas fa-plus fa-2x text-muted"></i>
+                        </a>
+                    </div>
+                </div>
+                <table id="roomLocationHotelTable" class="table table-hover table-responsive-md">
+                    <thead>
+                        <tr>
+                            <th></th>
+                            <th>Room Location Code</th>
+                            <th>Room Location Description</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var roomLocation in Model.RoomLocations)
+                        {
+                            string bgColor = roomLocation.Status == Convert.ToBoolean(Domain.Enums.Status.Active) ? "success" : "danger";
+                            <tr class="@bgColor">
+                                <td>
+                                    @if (roomLocation.Status == Convert.ToBoolean(Domain.Enums.Status.Active) && Model.Status == Convert.ToBoolean(Domain.Enums.Status.Active))
+                                    {
+                                        <a asp-action="RemoveRoomLocationFromHotel" asp-controller="Seller" asp-area="Dashboard" asp-route-roomLocationId=@roomLocation.Id asp-route-hotelId="@Model.Id" data-toggle="tooltip" title="Delete" data-placement="bottom" class="delete">
+                                            <i class="far fa-trash-alt text-danger"></i>
+                                        </a>
+                                    }
+                                </td>
+                                <td>@roomLocation.RoomLocationCode</td>
+                                <td>@roomLocation.Description</td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="tab-pane fade" id="hotelPrice" role="tabpanel" aria-labelledby="hotelPrice-tab">
+                <div class="row my-3">
+                    <div class="col-md-9">
+                        <h5>Price List</h5>
+                    </div>
+                    <div class="col-md-3 text-right">
+                        <a asp-action="CreateHotelPrice" asp-controller="Price" asp-route-hotelId="@Model.Id" data-toggle="tooltip" title="Add New" data-placement="bottom" class="add">
+                            <i class="fas fa-plus fa-2x text-muted"></i>
+                        </a>
+                    </div>
+                </div>
+                <table id="hotelPriceTable" class="table table-hover table-responsive-md">
+                    <thead>
+                        <tr>
+                            <th></th>
+                            <th></th>                                           
+                            <th>Accomodation Type</th>
+                            <th>Room Location</th>
+                            <th>Room Type</th>
+                            <th>Period</th>
+                            <th>Year</th>
+                            <th>Purchase Price</th>
+                            <th>Sale Price</th>
+                            <th>Created Date</th>
+                            <th>Created Ip Address</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var hotelPrice in Model.Prices)
+                        {
+                            string bgColor = hotelPrice.Status == Convert.ToBoolean(Domain.Enums.Status.Active) ? "success" : "danger";
+                        <tr class="@bgColor">
+                            <td>
+                                <a asp-action="EditHotelPrice" asp-controller="Price" asp-area="Dashboard" asp-route-id=@hotelPrice.Id class="text-success edit" data-toggle="tooltip" title="Edit" data-placement="bottom">
+                                    <i class="far fa-edit text-primary"></i>
+                                </a>
+                            </td>
+                            <td>
+                                @if (hotelPrice.Status == Convert.ToBoolean(Domain.Enums.Status.Active))
+                                {
+                                    <a asp-action="DeleteHotelPrice" asp-controller="Price" asp-area="Dashboard" asp-route-id=@hotelPrice.Id data-toggle="tooltip" title="Delete" data-placement="bottom" class="delete">
+                                        <i class="far fa-trash-alt text-danger"></i>
+                                    </a>
+                                }
+                            </td>                                                
+                            <td>@hotelPrice.AccomodationType.Description</td>
+                            <td>@hotelPrice.RoomLocation.RoomLocationCode</td>
+                            <td>@hotelPrice.RoomType.RoomTypeCode</td>
+                            <td>@hotelPrice.Period</td>
+                            <td>@hotelPrice.Year</td>
+                            <td>@hotelPrice.PurchasePrice &euro;</td>
+                            <td>@hotelPrice.SalePrice &euro;</td>
+                            <td>@hotelPrice.AddedDate.ToShortDateString()</td>
+                            <td>@hotelPrice.CreatedIpAddress</td>
+                        </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section scripts{
+    <script>
+
+        $(document).ready(function () {            
+
+            $('#accomodationTypeHotelTable').DataTable();
+            $('#roomTypeHotelTable').DataTable();
+            $('#roomLocationHotelTable').DataTable();
+            $('#hotelPriceTable').DataTable();
+
+            $(".delete").click(function (e) {
+
+                var isOK = confirm("Listeden kaldırmak istediğinize emin misiniz?")
+                if (!isOK) {
+                    e.preventDefault();
+                }
+                sessionStorage.setItem("parentid", "Sellers");
+                sessionStorage.setItem("id", "Hotel");
+            });
+            $(".add").click(function () {
+                sessionStorage.setItem("parentid", "Sellers");
+                sessionStorage.setItem("id", "Hotel");
+            });
+            $(".back").click(function () {
+                sessionStorage.setItem("parentid", "Sellers");
+                sessionStorage.setItem("id", "Hotel");
+            });
+            $(".edit").click(function () {
+                sessionStorage.setItem("parentid", "Sellers");
+                sessionStorage.setItem("id", "Hotel");
+            });
+        });
+
+    </script>
+}
+

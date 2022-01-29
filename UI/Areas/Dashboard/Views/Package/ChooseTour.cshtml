@@ -1,0 +1,115 @@
+﻿@model IEnumerable<TourOperatorPrice>
+@{
+    Layout = "~/Areas/Dashboard/Views/Shared/_DashboardLayout.cshtml";
+
+    DateTime startDate = Convert.ToDateTime(TempData["startDate"]);
+    var startYear = startDate.Year;
+    string startMonth = startDate.Month.ToString();
+    if (startMonth.ToCharArray().Length < 2)
+        startMonth = "0" + startMonth;
+
+    string startDay = startDate.Day.ToString();
+
+    if (startDay.ToCharArray().Length < 2)
+    {
+        startDay = "0" + startDay;
+    }
+
+    DateTime endDate = Convert.ToDateTime(TempData["endDate"]);
+    var endYear = endDate.Year;
+    string endMonth = endDate.Month.ToString();
+    if (endMonth.ToCharArray().Length < 2)
+    {
+        endMonth = "0" + endMonth;
+    }
+
+    string endDay = endDate.Day.ToString();
+    if (endDay.ToCharArray().Length < 2)
+    {
+        endDay = "0" + endDay;
+    }
+}
+
+<div class="card">
+    <form method="post">
+        <div class="card-header col-lg-12">
+            <div class="row">
+                <div class="col-md-9">
+                    <h4>Tour Price List</h4>
+
+                    <div class="row">
+                        <div class="col-lg-6">
+                            <label>Tour Date</label>
+                            <input type="date" id="beginDate" name="date" class="form-control" min="@startYear.ToString()-@startMonth-@startDay" max="@endYear.ToString()-@endMonth-@endDay" />
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-3 text-right">
+                    <a href="@TempData["referer"]" data-toggle="tooltip" title="Go Back" data-placement="bottom">
+                        <i class="fas fa-arrow-left fa-2x text-muted"></i>
+                    </a>
+                </div>
+            </div>
+        </div>
+        <div class="card-body col-lg-12">
+            <table id="priceTable" class="table table-hover table-responsive-md">
+                <thead>
+                    <tr>
+                        <th>Company Name</th>
+                        <th>Tour</th>
+                        <th>Region</th>
+                        <th>Year</th>
+                        <th>Period</th>
+                        <th>Price Per Person(Eur)</th>
+                        <th> </th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var price in Model)
+                    {
+                        <tr>
+                            <td>@price.TourOperator.TourOperatorName</td>
+                            <td>@price.Tour.TourName</td>
+                            <td>@price.Tour.Region.RegionName</td>
+                            <td>@price.Year</td>
+                            <td>@price.Period</td>
+                            <td>@price.SalePrice</td>
+                            <td>
+                                <button type="submit" asp-route-priceId="@price.Id" data-toggle="tooltip" title="Choose" data-placement="bottom" class="btn add" id="choose">
+                                    <i class="far fa-check-circle text-success"></i>
+                                </button>                            
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </form>
+</div>
+
+@section scripts{
+    <script>
+
+        $(document).ready(function () {
+
+            $('#priceTable').DataTable();
+
+            $(".add").click(function () {
+                sessionStorage.setItem("parentid", "Packages");
+                sessionStorage.setItem("id", "Package");
+            });
+
+            $("#choose").click(function (e) {
+
+                var date = $("#beginDate").val();
+                if (date == "" || date == undefined) {
+                    alert("Please choose a date!")
+                    e.preventDefault();
+                };               
+            });
+
+        });
+    </script>
+
+}
+

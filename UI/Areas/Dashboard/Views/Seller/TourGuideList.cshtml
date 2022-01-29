@@ -1,0 +1,93 @@
+﻿@model  IEnumerable<TourGuide> 
+@{
+    Layout = "~/Areas/Dashboard/Views/Shared/_DashboardLayout.cshtml";
+}
+
+<div class="card">
+    <div class="card-header col-lg-12">
+        <div class="row">
+            <div class="col-md-9">
+                <h4>Tour Guide List</h4>
+            </div>
+            <div class="col-md-3 text-right">
+                <a asp-action="CreateTourGuide" asp-controller="Seller" data-toggle="tooltip" title="Add New" data-placement="bottom">
+                    <i class="fas fa-plus fa-2x text-muted"></i>
+                </a>
+            </div>
+        </div>
+    </div>
+    <div class="card-body col-lg-12">
+        <table id="tourGuideTable" class="table table-hover table-responsive-md">
+            <thead>
+                <tr>
+                    <th></th>
+                    <th></th>
+                    <th></th>
+                    <th>Tour Guide Code</th>
+                    <th>Name</th>
+                    <th>Surname</th>
+                    <th>Language</th>
+                    <th>Region</th>
+                    <th>Address</th>
+                    <th>Created Date</th>
+                    <th>Created Ip Address</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var guide in Model)
+                {
+                    string bgColor = guide.Status == Convert.ToBoolean(Domain.Enums.Status.Active) ? "success" : "danger";
+                <tr class="@bgColor">
+                    <td>
+                        <a asp-action="EditTourGuide" asp-controller="Seller" asp-area="Dashboard" asp-route-id=@guide.Id class="text-success" data-toggle="tooltip" title="Edit" data-placement="bottom">
+                            <i class="far fa-edit text-primary"></i>
+                        </a>
+                    </td>
+                    <td>
+                        @if (guide.Status == Convert.ToBoolean(Domain.Enums.Status.Active))
+                        {
+                            <a asp-action="DeleteTourGuide" asp-controller="Seller" asp-area="Dashboard" asp-route-id=@guide.Id data-toggle="tooltip" title="Delete" data-placement="bottom" class="delete">
+                                <i class="far fa-trash-alt text-danger"></i>
+                            </a>
+                        }
+                    </td>
+                    <td>
+                        <a asp-action="TourGuideDetails" asp-controller="Seller" asp-area="Dashboard" asp-route-id=@guide.Id data-toggle="tooltip" title="Details" data-placement="bottom">
+                            <i class="fas fa-bars text-secondary"></i>
+                        </a>
+                    </td>
+                    <td>@guide.TourGuideCode</td>
+                    <td>@guide.TourGuideName</td>
+                    <td>@guide.TourGuideSurname</td>
+                    <td>@guide.Language</td>
+                    <td>@guide.Region.RegionName</td>
+                    <td>@guide.Address</td>
+                    <td>@guide.AddedDate</td>
+                    <td>@guide.CreatedIpAddress</td>
+                </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>
+
+@section scripts{
+    <script>
+
+        $(document).ready(function () {
+
+            $('#tourGuideTable').DataTable();
+
+            $(".delete").click(function (e) {
+
+                var isOK = confirm("Are you sure you want to delete?")
+                if (!isOK) {
+                    e.preventDefault();
+                }
+            });
+
+        });
+    </script>
+
+}
+

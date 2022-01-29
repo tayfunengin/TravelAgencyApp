@@ -1,0 +1,52 @@
+﻿@model List<AppUserRole>
+@{    
+    Layout = "~/Areas/Dashboard/Views/Shared/_DashboardLayout.cshtml";
+}
+
+<div class="card">
+    <div class="card-header col-lg-12">
+        <div class="row">
+            <div class="col-md-9">
+                <h4>Role List</h4>
+            </div>
+            <div class="col-md-3 text-right">
+                <a asp-action="Create" asp-controller="Role" class="btn btn-outline-primary">Add Role</a>
+            </div>
+        </div>
+    </div>
+    <div class="card-body col-lg-12">
+        <table id="roleTable" class="table table-hover table-responsive-sm">
+            <thead>
+                <tr>
+                    <th>Role Name</th>
+                    <th>Description</th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var role in Model)
+                {
+                    <tr>
+                        <td>@role.Name</td>
+                        <td>@role.Description</td>
+                        <td>
+                            <a asp-action="Edit" asp-controller="Role" asp-route-id="@role.Id" class="btn btn-light">Update</a>
+                            <a asp-action="Delete" asp-controller="Role" asp-route-id="@role.Id" class="btn btn-light">Delete</a>
+                            <a asp-action="Details" asp-controller="Role" asp-route-id="@role.Id" class="btn btn-light">User List</a>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>
+
+@section scripts{
+
+    <script>
+        $(document).ready(function () {
+            $('#roleTable').DataTable();
+        });
+    </script>
+
+}

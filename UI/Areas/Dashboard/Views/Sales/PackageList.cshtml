@@ -1,0 +1,124 @@
+﻿@model IEnumerable<Package>
+@{
+    Layout = "~/Areas/Dashboard/Views/Shared/_DashboardLayout.cshtml";
+}
+
+<div class="card">
+    <div class="card-header col-lg-12">
+        <h5>Filters</h5>
+    </div>
+    <div class="card-body col-lg-12">
+        <form method="post" name="packageList" id="packageListForm">
+            <div class="row">
+                <div class="col-lg-4 col-md-6">
+                    <div class="form-group">
+                        <label>Period</label>
+                        <select asp-items="Html.GetEnumSelectList<Domain.Enums.Period>()" name="period" class="form-control">
+                            <option selected="selected" value="">Please Choose</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="col-lg-4 col-md-6">
+                    <div class="form-group">
+                        <label>Region</label>
+                        @Html.DropDownList("regionId", TempData["regions"] as SelectList, "Please Choose",new { @class = "form-control" })                 
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+
+                <div class="col-lg-2 col-md-3">
+                    <div class="form-group">
+                        <label></label>
+                        <button type="submit" class="form-control btn btn-outline-secondary" id="filter">Filter</button>
+                    </div>
+                </div>
+                <div class="col-lg-2 col-md-3">
+                    <div class="form-group">
+                        <label></label>
+                        <button type="reset" class="form-control btn btn-default" id="resetButton">Clear Filters</button>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+<div class="card">
+    <div class="card-header col-lg-12">
+        <div class="row">
+            <div class="col-md-9">
+                <h4>Packages</h4>
+            </div>
+            <div class="col-md-3 text-right">
+                <a asp-action="Create" asp-controller="Package" data-toggle="tooltip" title="Add New" data-placement="bottom">
+                    <i class="fas fa-plus fa-2x text-muted"></i>
+                </a>
+            </div>
+        </div>
+    </div>
+    <div class="card-body col-lg-12">
+        <table id="packageTable" class="table table-hover table-responsive-md">
+            <thead>
+                <tr>
+                    <th></th>
+                    <th></th>
+                    <th>Package Name</th>
+                    <th>Region</th>
+                    <th>Period</th>
+                    <th>Start Date</th>
+                    <th>End Date</th>
+                    <th>Quota</th>
+                    <th>Price (Eur)</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var package in Model)
+                {                   
+                <tr>
+                    <td>
+                        <a asp-action="Details" asp-controller="Sales" asp-area="Dashboard" asp-route-id=@package.Id data-toggle="tooltip" title="Details" data-placement="bottom">
+                            <i class="fas fa-bars text-secondary"></i>
+                        </a>
+                    </td>
+                    <td style="width:10%;">
+                        <img src="~/images/hotelImage/@package.HotelPrice.Hotel.ProfilePhotoPath" alt="@package.HotelPrice.Hotel.HotelName" class="card-img" />
+                    </td>
+                    <td>@package.PackageName</td>
+                    <td>@package.Region.RegionName</td>
+                    <td>@package.Period</td>
+                    <td>@package.CheckInDate.ToShortDateString()</td>
+                    <td>@package.CheckOutDate.ToShortDateString()</td>
+                    @if (package.Quota == 0)
+                    {
+                        <td style="color:red;">@package.Quota</td>
+                    }
+                    else
+                    {
+                        <td>@package.Quota</td>
+                    }               
+                    <td>@package.Total &euro;</td>
+                </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>
+
+@section scripts{
+
+    <script>
+
+        $(document).ready(function () {
+
+            $('#packageTable').DataTable();
+
+        });
+        $("#resetButton").click(function () {
+
+            $("#regionId option").removeAttr('selected');
+        });  
+
+    </script>
+
+}
+

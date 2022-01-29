@@ -1,0 +1,38 @@
+﻿@model AppUserRole
+@{
+    Layout = "~/Areas/Dashboard/Views/Shared/_DashboardLayout.cshtml";
+}
+
+<div class="row">
+    <div class="card col-lg-6 mx-auto">
+        <div class="card-header">
+            <div class="row">
+                <div class="col-md-9">
+                    <h4>Create Role</h4>
+                </div>
+                <div class="col-md-3 text-right">
+                    <a asp-action="Index" asp-controller="Role" class="btn btn-default btn-sm">Back to List</a>
+                </div>
+            </div>
+        </div>
+
+        <div class="card-body">
+            <form method="post" asp-action="Create" asp-controller="Role">
+                @Html.AntiForgeryToken()
+                <div asp-validation-summary="All" class="text-danger"></div>
+                <div class="form-group">
+                    <label asp-for="Name"></label>
+                    @Html.DropDownListFor(x => x.Name, TempData["roles"] as SelectList,"Please Choose" ,new { @class = "form-control" })
+                </div>
+
+                <div class="form-group">
+                    <label>Description:</label>
+                    <input asp-for="Description" type="text" class="form-control" />
+                </div>
+                <button type="submit" class="btn btn-outline-primary">Create Role</button>
+            </form>
+        </div>
+
+    </div>
+</div>
+

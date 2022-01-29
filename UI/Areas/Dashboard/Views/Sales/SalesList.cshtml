@@ -1,0 +1,118 @@
+﻿@model IEnumerable<Sales>
+@{
+    Layout = "~/Areas/Dashboard/Views/Shared/_DashboardLayout.cshtml";
+
+    DateTime now = DateTime.Now;
+    var startYear = now.Year;
+    string startMonth = now.Month.ToString();
+    if (startMonth.ToCharArray().Length < 2)
+        startMonth = "0" + startMonth;
+
+    string startDay = now.Day.ToString();
+
+    if (startDay.ToCharArray().Length < 2)
+    {
+        startDay = "0" + startDay;
+    }
+}
+
+<div class="card">
+    <div class="card-header col-lg-12">
+        <h5>Filters</h5>
+    </div>
+    <div class="card-body col-lg-12">
+        <form method="post" name="salesList" id="salesListForm">
+            <div class="row">
+                <div class="form-group col-lg-4 col-md-6">
+                    <label>Region</label>
+                    @Html.DropDownList("regionId", TempData["regions"] as SelectList, "Please Choose", new { @class = "form-control" })
+                </div>
+                <div class="form-group col-lg-4 col-md-6">
+                    <label>Sales After:</label>
+                    <input type="date" class="form-control" id="beginDate" name="salesDate" min="2020-01-01" max="@startYear.ToString()-@startMonth-@startDay" />
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-lg-2 col-md-3">
+                    <div class="form-group">
+                        <label></label>
+                        <button type="submit" class="form-control btn btn-outline-secondary" id="filter">Filter</button>
+                    </div>
+                </div>
+                <div class="col-lg-2 col-md-3">
+                    <div class="form-group">
+                        <label></label>
+                        <button type="reset" class="form-control btn btn-default" id="resetButton">Clear Filters</button>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+<div class="card">
+    <div class="card-header col-lg-12">
+        <div class="row">
+            <div class="col-md-9">
+                <h4>Sales List</h4>
+            </div>        
+        </div>
+    </div>
+    <div class="card-body col-lg-12">
+        <table id="salesTable" class="table table-hover table-responsive-md">
+            <thead>
+                <tr>
+                    <th></th>
+                    <th>Sales Code</th>
+                    <th>Hotel Name</th>
+                    <th>Check-in</th>
+                    <th>Check-out</th>
+                    <th>Region</th>
+                    <th>Period</th>
+                    <th>Sales Date</th>
+                    <th>Sales Amount</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var sales in Model)
+                {
+                    <tr>
+                        <td>
+                            <a asp-action="SalesDetails" asp-controller="Sales" asp-area="Dashboard" asp-route-id=@sales.Id data-toggle="tooltip" title="Details" data-placement="bottom">
+                                <i class="fas fa-bars text-secondary"></i>
+                            </a>
+                        </td>
+                        <td>@sales.SalesCode</td>
+                        <td>@sales.Package.HotelPrice.Hotel.HotelName</td>
+                        <td>@sales.Package.CheckInDate.ToShortDateString()</td>
+                        <td>@sales.Package.CheckOutDate.ToShortDateString()</td>
+                        <td>@sales.Package.Region.RegionName</td>
+                        <td>@sales.Package.Period</td>
+                        <td>@sales.SalesDate.ToShortDateString()</td>
+                        <td>@sales.SalesAmount &#x20BA;</td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>
+
+@section scripts{
+
+    <script>
+
+        $(document).ready(function () {
+
+            $('#salesTable').DataTable();
+
+            $("#resetButton").click(function () {
+
+                $("#regionId option").removeAttr('selected');
+            });
+
+        });
+
+
+    </script>
+
+}
+

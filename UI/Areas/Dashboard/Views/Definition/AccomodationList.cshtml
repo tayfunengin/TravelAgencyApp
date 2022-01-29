@@ -1,0 +1,78 @@
+﻿@model IEnumerable<AccomodationType>
+@{
+    Layout = "~/Areas/Dashboard/Views/Shared/_DashboardLayout.cshtml";
+}
+
+<div class="card">
+    <div class="card-header col-lg-12">
+        <div class="row">
+            <div class="col-md-9">
+                <h4>Accomodation Type List</h4>
+            </div>
+            <div class="col-md-3 text-right">
+                <a asp-action="CreateAccomodationType" asp-controller="Definition" data-toggle="tooltip" title="Add New" data-placement="bottom">
+                    <i class="fas fa-plus fa-2x text-muted"></i>
+                </a>
+            </div>
+        </div>
+    </div>
+    <div class="card-body col-lg-12">
+        <table id="accomodationTable" class="table table-hover table-responsive-md">
+            <thead>
+                <tr>
+                    <th></th>
+                    <th></th>
+                    <th>Accomodation Code</th>
+                    <th>Description</th>
+                    <th>Created Date</th>
+                    <th>Created Ip Address</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var accomodationType in Model)
+                {
+                    string bgColor = accomodationType.Status == Convert.ToBoolean(Domain.Enums.Status.Active) ? "success" : "danger";
+                    <tr class="@bgColor">
+                        <td>
+                            <a asp-action="EditAccomodationType" asp-controller="Definition" asp-area="Dashboard" asp-route-id=@accomodationType.Id class="text-success" data-toggle="tooltip" title="Edit" data-placement="bottom">
+                                <i class="far fa-edit text-primary"></i>
+                            </a>
+                        </td>
+                        <td>
+                            @if (accomodationType.Status == Convert.ToBoolean(Domain.Enums.Status.Active))
+                            {
+                                <a asp-action="DeleteAccomodationType" asp-controller="Definition" asp-area="Dashboard" asp-route-id=@accomodationType.Id data-toggle="tooltip" title="Delete" data-placement="bottom" class="delete">
+                                    <i class="far fa-trash-alt text-danger"></i>
+                                </a>
+                            }
+                        </td>
+                        <td>@accomodationType.AccomodationCode</td>
+                        <td>@accomodationType.Description</td>
+                        <td>@accomodationType.AddedDate.ToShortDateString()</td>
+                        <td>@accomodationType.CreatedIpAddress</td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>
+
+@section scripts{
+    <script>
+
+        $(document).ready(function () {
+
+            $('#accomodationTable').DataTable();
+            
+            $(".delete").click(function (e) {
+
+                var isOK = confirm("Are you sure you want to delete?")
+                if (!isOK) {
+                    e.preventDefault();
+                }
+            });
+        });
+    </script>
+
+}
+

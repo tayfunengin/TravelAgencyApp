@@ -1,0 +1,70 @@
+﻿@model List<UserAndRoleVM>
+@{
+    Layout = "~/Areas/Dashboard/Views/Shared/_DashboardLayout.cshtml";
+}
+
+<div class="card">
+    <div class="card-header col-lg-12">
+        <div class="row">
+            <div class="col-md-9">
+                <h4>User List</h4>
+            </div>
+            <div class="col-md-3 text-right">
+                <a asp-action="Create" asp-controller="User" class="btn btn-outline-primary">Add User</a>
+            </div>
+        </div>
+    </div>
+    <div class="card-body col-lg-12">
+        <table id="userTable" class="table table-hover table-responsive-md">
+            <thead>
+                <tr>
+                    <th>User Name</th>
+                    <th>Email</th>
+                    <th>Name</th>
+                    <th>Surname</th>
+                    <th>Role</th>
+                    <th></th>
+
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var user in Model)
+                {
+                    <tr>
+                        <td>@user.UserName</td>
+                        <td>@user.Email</td>
+                        <td>@user.FirstName</td>
+                        <td>@user.LastName</td>
+                        <td>
+                            @if (string.IsNullOrEmpty(user.Role))
+                            {
+                            <span class="alert-info">Assign a role</span>
+                            }
+                            else
+                            {
+                                @user.Role
+                            }
+
+                        </td>
+                            <td>
+                                <a asp-action="Edit" asp-controller="User" asp-route-id="@user.Id" class="btn btn-sm btn-light">Update</a>
+                                <a asp-action="Delete" asp-controller="User" asp-route-id="@user.Id" class="btn btn-sm btn-light">Delete</a>
+                            </td>
+                        </tr>
+                    }
+            </tbody>
+        </table>
+    </div>
+</div>
+
+@section scripts{
+    <script>
+
+        $(document).ready(function () {
+            $('#userTable').DataTable();
+        });
+
+    </script>
+
+}
+

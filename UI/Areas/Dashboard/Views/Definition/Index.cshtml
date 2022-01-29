@@ -1,0 +1,131 @@
+﻿
+@{
+    Layout = "~/Areas/Dashboard/Views/Shared/_DashboardLayout.cshtml";
+}
+
+<div class="row">
+    <div class="col-lg-3 col-md-4 col-sm-6">
+        <div class="card text-center">
+            <h5>
+                Accomodation Types
+            </h5>
+            <h6>Total Active Count: @TempData["AccomodationTypeCount"]</h6>
+            <div class="card-footer">
+                <div class="row text-center" id="AccomodationTypes">
+                    <div class="col">
+                        <a asp-action="AccomodationList" asp-controller="Definition" asp-area="Dashboard" class="btn btn-default">Go to List</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-lg-3 col-md-4 col-sm-6">
+        <div class="card text-center">
+            <h5>
+                Cars
+            </h5>
+            <h6>Total Active Count: @TempData["CarCount"]</h6>
+            <div class="card-footer">
+                <div class="row text-center" id="Cars">
+                    <div class="col">
+                        <a asp-action="CarList" asp-controller="Definition" class="btn btn-default">Go to List</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-lg-3 col-md-4 col-sm-6">
+        <div class="card text-center">
+            <h5>
+                Planes
+            </h5>
+            <h6>Total Active Count: @TempData["PlaneCount"]</h6>
+            <div class="card-footer">
+                <div class="row text-center" id="Planes">
+                    <div class="col">
+                        <a asp-action="PlaneList" asp-controller="Definition" class="btn btn-default">Go to List</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-lg-3 col-md-4 col-sm-6">
+        <div class="card text-center">
+            <h5>
+                Regions
+            </h5>
+            <h6>Total Active Count: @TempData["RegionCount"]</h6>
+            <div class="card-footer">
+                <div class="row text-center" id="Regions">
+                    <div class="col">
+                        <a asp-action="RegionList" asp-controller="Definition" class="btn btn-default">Go to List</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-lg-3 col-md-4 col-sm-6">
+        <div class="card text-center">
+            <h5>
+                Room Locations
+            </h5>
+            <h6>Total Active Count: @TempData["RoomLocationCount"]</h6>
+            <div class="card-footer">
+                <div class="row text-center" id="RoomLocations">
+                    <div class="col">
+                        <a asp-action="RoomLocationList" asp-controller="Definition" class="btn btn-default">Go to List</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-lg-3 col-md-4 col-sm-6">
+        <div class="card text-center">
+            <h5>
+                Room Types
+            </h5>
+            <h6>Total Active Count: @TempData["RoomTypeCount"] </h6>
+            <div class="card-footer">
+                <div class="row text-center" id="RoomTypes">
+                    <div class="col">
+                        <a asp-action="RoomTypeList" asp-controller="Definition" class="btn btn-default">Go to List</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-lg-3 col-md-4 col-sm-6">
+        <div class="card text-center">
+            <h5>
+                Tours
+            </h5>
+            <h6>Total Active Count: @TempData["TourCount"]</h6>
+            <div class="card-footer">
+                <div class="row text-center" id="Tours">
+                    <div class="col">
+                        <a asp-action="TourList" asp-controller="Definition" class="btn btn-default">Go to List</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section scripts{
+
+    <script>
+
+        $(function () {
+
+            $(".btn").on("click", function () {
+
+                var parentid = "Definitions"
+                var id = $(this).parents(".row").attr('id');
+                sessionStorage.setItem("parentid", parentid);
+                sessionStorage.setItem("id", id);
+            });
+        });
+
+    </script>
+
+}

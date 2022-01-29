@@ -1,0 +1,42 @@
+﻿@model TourOperator
+@{  
+    Layout = "~/Areas/Dashboard/Views/Shared/_DashboardLayout.cshtml";
+}
+
+<div class="card col-lg-9 mx-auto">
+    <div class="card-header">
+        <div class="row">
+            <div class="col-md-9">
+                <h4>Create Tour Operator</h4>
+            </div>
+            <div class="col-md-3 text-right">
+                <a href="@TempData["referer"]" data-toggle="tooltip" title="Go Back" data-placement="bottom">
+                    <i class="fas fa-arrow-left fa-2x text-muted"></i>
+                </a>
+            </div>
+        </div>
+    </div>
+    <div class="card-body">
+        <div asp-validation-summary="All" class="text-danger">
+        </div>
+        <form asp-action="CreateTourOperator" method="post">
+            @Html.AntiForgeryToken()
+            <div class="form-group col-lg-6">
+                <label asp-for="TourOperatorCode"></label>
+                <input asp-for="TourOperatorCode" class="form-control" />
+            </div>
+            <div class="form-group col-lg-6">
+                <label asp-for="TourOperatorName"></label>
+                <input asp-for="TourOperatorName" class="form-control" />
+            </div>
+            <div class="form-group">
+                <label asp-for="Address"></label>
+                <input asp-for="Address" class="form-control" />
+            </div>
+            <div class="col-lg-12">
+                <button type="submit" class="btn btn-outline-primary mt-2 ">Create</button>
+            </div>
+        </form>
+    </div>
+</div>
+

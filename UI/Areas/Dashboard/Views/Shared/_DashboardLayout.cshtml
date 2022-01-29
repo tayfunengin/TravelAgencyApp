@@ -1,0 +1,464 @@
+﻿
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta http-equiv="x-ua-compatible" content="ie=edge">
+
+    <title>@ViewData["Title"] - Dashboard</title>
+
+    <!-- Font Awesome Icons -->
+    <link rel="stylesheet" href="~/dashboard/plugins/fontawesome-free/css/all.min.css">
+    <!-- Theme style -->
+    <link href="~/dashboard/dist/css/adminlte.css" rel="stylesheet" />
+
+    <!-- Google Font: Source Sans Pro -->
+    <link href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700" rel="stylesheet">
+
+    <!-- Data Table-->
+    <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.24/css/jquery.dataTables.css">
+    <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/datetime/1.1.1/css/dataTables.dateTime.min.css">
+
+    <!-- Toaster -->
+    <link href="~/dashboard/plugins/toastr/toastr.css" rel="stylesheet" />
+
+    <!-- Custom Css -->
+    <link href="~/css/dashboardCss.css" rel="stylesheet" />
+
+    <!-- Multiselect Bootstrap -->
+    <link href="~/bootstrap-multiselect/css/bootstrap-multiselect.css" rel="stylesheet" />
+
+</head>
+<body class="hold-transition sidebar-mini">
+    <div class="wrapper">
+
+        <!-- Navbar -->
+        <nav class="main-header navbar navbar-expand navbar-white navbar-light">
+            <!-- Left navbar links -->
+            <ul class="navbar-nav">
+                <li class="nav-item">
+                    <a class="nav-link" data-widget="pushmenu" href="#" role="button"><i class="fas fa-bars"></i></a>
+                </li>
+                <li class="nav-item d-none d-sm-inline-block">
+                    <a asp-action="Index" asp-controller="Home" asp-area="Dashboard" class="nav-link">Home</a>
+                </li>
+
+            </ul>
+            <!-- Right navbar links -->
+            <ul class="navbar-nav ml-auto">
+
+                <li class="nav-item">
+                    <a asp-action="LogOut" asp-controller="Account" asp-area="" class="btn btn-outline-secondary mr-2 logout">LogOut </a>
+
+                </li>
+            </ul>
+        </nav>
+        <!-- /.navbar -->
+        <!-- Main Sidebar Container -->
+        <aside class="main-sidebar sidebar-dark-primary elevation-4">
+            <!-- Brand Logo -->
+            <a href="@Url.ActionLink("Index","Home", new { area = "" })" class="brand-link">
+                <img src="#" alt="" class="brand-image img-circle elevation-3"
+                     style="opacity: .8">
+                <span class="brand-text font-weight-light">My Agency</span>
+            </a>
+            <!-- Sidebar -->
+            <div class="sidebar">
+
+                <!-- Sidebar Menu -->
+                <nav class="mt-2">
+                    <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false">
+                        <!-- Add icons to the links using the .nav-icon class
+                        with font-awesome or any other icon font library -->
+                        <li class="nav-item has-treeview" id="Logs">
+                            <a href="#" class="nav-link">
+                                <i class="fas fa-file-medical-alt"></i>
+                                <p>
+                                    Logs
+                                    <i class="right fas fa-angle-left"></i>
+                                </p>
+                            </a>
+                            <ul class="nav nav-treeview">
+                                <li class="nav-item" id="UserLogs">
+                                    <a asp-action="UserLogs" asp-controller="Log" asp-area="Dashboard" class="nav-link">
+                                        <i class="nav-icon far fa-angle-double-right"></i>
+                                        <p>User Logs</p>
+                                    </a>
+                                </li>
+                                <li class="nav-item" id="ChangeHistory">
+                                    <a asp-action="ChangeLogs" asp-controller="Log" asp-area="Dashboard" class="nav-link">
+                                        <i class="nav-icon far fa-angle-double-righ"></i>
+                                        <p>Change History</p>
+                                    </a>
+                                </li>
+                            </ul>
+                        </li>
+                        <li class="nav-item has-treeview" id="Authorization">
+                            <a href="#" class="nav-link">
+                                <i class="fas fa-users"></i>
+                                <p>
+                                    Authorization
+                                    <i class="right fas fa-angle-left"></i>
+                                </p>
+                            </a>
+                            <ul class="nav nav-treeview">
+                                <li class="nav-item" id="UserList">
+                                    <a asp-action="Index" asp-controller="User" asp-area="Dashboard" class="nav-link">
+                                        <i class="nav-icon far fa-angle-double-righ"></i>
+                                        <p>User List</p>
+                                    </a>
+                                </li>
+                                <li class="nav-item" id="RoleList">
+                                    <a asp-action="Index" asp-controller="Role" asp-area="Dashboard" class="nav-link">
+                                        <i class="nav-icon far fa-angle-double-righ"></i>
+                                        <p>Role List</p>
+                                    </a>
+                                </li>
+                            </ul>
+                        </li>
+
+                        <li class="nav-item has-treeview" id="Definitions">
+                            <a href="#" class="nav-link">
+                                <i class="fas fa-tachometer-alt"></i>
+                                <p>
+                                    Definitions
+                                    <i class="right fas fa-angle-left"></i>
+                                </p>
+                            </a>
+                            <ul class="nav nav-treeview">
+                                <li class="nav-item" id="Overview">
+                                    <a asp-action="Index" asp-controller="Definition" asp-area="Dashboard" class="nav-link">
+                                        <i class="nav-icon far fa-angle-double-right"></i>
+                                        <p>Overview</p>
+                                    </a>
+                                </li>
+                                <li class="nav-item" id="AccomodationTypes">
+                                    <a asp-action="AccomodationList" asp-controller="Definition" asp-area="Dashboard" class="nav-link">
+                                        <i class="nav-icon far fa-angle-double-right"></i>
+                                        <p>Accomodation Types</p>
+                                    </a>
+                                </li>
+                                <li class="nav-item" id="Cars">
+                                    <a asp-action="CarList" asp-controller="Definition" asp-area="Dashboard" class="nav-link">
+                                        <i class="nav-icon far fa-angle-double-right"></i>
+                                        <p>Cars</p>
+                                    </a>
+                                </li>
+                                <li class="nav-item" id="Planes">
+                                    <a asp-action="PlaneList" asp-controller="Definition" asp-area="Dashboard" class="nav-link">
+                                        <i class="nav-icon far fa-angle-double-right"></i>
+                                        <p>Planes</p>
+                                    </a>
+                                </li>
+                                <li class="nav-item" id="Regions">
+                                    <a asp-action="RegionList" asp-controller="Definition" asp-area="Dashboard" class="nav-link">
+                                        <i class="nav-icon far fa-angle-double-right"></i>
+                                        <p>Regions</p>
+                                    </a>
+                                </li>
+                                <li class="nav-item" id="RoomLocations">
+                                    <a asp-action="RoomLocationList" asp-controller="Definition" asp-area="Dashboard" class="nav-link">
+                                        <i class="nav-icon far fa-angle-double-right"></i>
+                                        <p>Room Locations</p>
+                                    </a>
+                                </li>
+                                <li class="nav-item" id="RoomTypes">
+                                    <a asp-action="RoomTypeList" asp-controller="Definition" asp-area="Dashboard" class="nav-link">
+                                        <i class="nav-icon far fa-angle-double-right"></i>
+                                        <p>Room Types</p>
+                                    </a>
+                                </li>
+                                <li class="nav-item" id="Routes">
+                                    <a asp-action="RouteList" asp-controller="Definition" asp-area="Dashboard" class="nav-link">
+                                        <i class="nav-icon far fa-angle-double-right"></i>
+                                        <p>Routes</p>
+                                    </a>
+                                </li>
+                                <li class="nav-item" id="Tours">
+                                    <a asp-action="TourList" asp-controller="Definition" asp-area="Dashboard" class="nav-link">
+                                        <i class="nav-icon far fa-angle-double-right"></i>
+                                        <p>Tours</p>
+                                    </a>
+                                </li>
+                            </ul>
+                        </li>
+                        <li class="nav-item has-treeview" id="Sellers">
+                            <a href="#" class="nav-link">
+                                <i class="fas fa-piggy-bank"></i>
+                                <p>
+                                    Sellers
+                                    <i class="right fas fa-angle-left"></i>
+                                </p>
+                            </a>
+                            <ul class="nav nav-treeview">
+                                <li class="nav-item" id="FlightCompany">
+                                    <a asp-action="FlightCompanyList" asp-controller="Seller" asp-area="Dashboard" class="nav-link">
+                                        <i class="nav-icon far fa-angle-double-right"></i>
+                                        <p>Flight Companies</p>
+                                    </a>
+                                </li>
+                                <li class="nav-item" id="Hotel">
+                                    <a asp-action="HotelList" asp-controller="Seller" asp-area="Dashboard" class="nav-link">
+                                        <i class="nav-icon far fa-angle-double-right"></i>
+                                        <p>Hotels</p>
+                                    </a>
+                                </li>
+                                <li class="nav-item" id="RentACarCompany">
+                                    <a asp-action="RentACarCompanyList" asp-controller="Seller" asp-area="Dashboard" class="nav-link">
+                                        <i class="nav-icon far fa-angle-double-right"></i>
+                                        <p>Rent A Car Companies</p>
+                                    </a>
+                                </li>
+                                <li class="nav-item" id="TransportationCompany">
+                                    <a asp-action="TransportationCompanyList" asp-controller="Seller" asp-area="Dashboard" class="nav-link">
+                                        <i class="nav-icon far fa-angle-double-right"></i>
+                                        <p>Transportation Companies</p>
+                                    </a>
+                                </li>
+                                <li class="nav-item" id="TourGuide">
+                                    <a asp-action="TourGuideList" asp-controller="Seller" asp-area="Dashboard" class="nav-link">
+                                        <i class="nav-icon far fa-angle-double-right"></i>
+                                        <p>TourGuides</p>
+                                    </a>
+                                </li>
+                                <li class="nav-item" id="TourOperator">
+                                    <a asp-action="TourOperatorList" asp-controller="Seller" asp-area="Dashboard" class="nav-link">
+                                        <i class="nav-icon far fa-angle-double-right"></i>
+                                        <p>Tour Operators</p>
+                                    </a>
+                                </li>
+                            </ul>
+
+                        </li>
+                        <li class="nav-item has-treeview" id="Prices">
+                            <a href="#" class="nav-link">
+                                <i class="fas fa-piggy-bank"></i>
+                                <p>
+                                    Prices
+                                    <i class="right fas fa-angle-left"></i>
+                                </p>
+                            </a>
+                            <ul class="nav nav-treeview">
+                                <li class="nav-item" id="FlightPrice">
+                                    <a asp-action="FlightPriceList" asp-controller="Price" asp-area="Dashboard" class="nav-link">
+                                        <i class="nav-icon far fa-angle-double-right"></i>
+                                        <p>Flight Prices</p>
+                                    </a>
+                                </li>
+                                <li class="nav-item" id="HotelPrice">
+                                    <a asp-action="HotelPriceList" asp-controller="Price" asp-area="Dashboard" class="nav-link">
+                                        <i class="nav-icon far fa-angle-double-right"></i>
+                                        <p>Hotel Prices</p>
+                                    </a>
+                                </li>
+                                <li class="nav-item" id="RentACarPrice">
+                                    <a asp-action="RentACarPriceList" asp-controller="Price" asp-area="Dashboard" class="nav-link">
+                                        <i class="nav-icon far fa-angle-double-right"></i>
+                                        <p>Rent A Car Prices</p>
+                                    </a>
+                                </li>
+                                <li class="nav-item" id="TransportationPrice">
+                                    <a asp-action="TransportationPriceList" asp-controller="Price" asp-area="Dashboard" class="nav-link">
+                                        <i class="nav-icon far fa-angle-double-right"></i>
+                                        <p>Transportation Prices</p>
+                                    </a>
+                                </li>
+                                <li class="nav-item" id="TourGuidePrice">
+                                    <a asp-action="TourGuidePriceList" asp-controller="Price" asp-area="Dashboard" class="nav-link">
+                                        <i class="nav-icon far fa-angle-double-right"></i>
+                                        <p>TourGuide Prices</p>
+                                    </a>
+                                </li>
+                                <li class="nav-item" id="TourOperatorPrice">
+                                    <a asp-action="TourOperatorPriceList" asp-controller="Price" asp-area="Dashboard" class="nav-link">
+                                        <i class="nav-icon far fa-angle-double-right"></i>
+                                        <p>Tour Prices</p>
+                                    </a>
+                                </li>
+                            </ul>
+
+                        </li>
+                        <li class="nav-item has-treeview" id="Packages">
+                            <a href="#" class="nav-link">
+                                <i class="fas fa-piggy-bank"></i>
+                                <p>
+                                    Packages
+                                    <i class="right fas fa-angle-left"></i>
+                                </p>
+                            </a>
+                            <ul class="nav nav-treeview">
+                                <li class="nav-item" id="Package">
+                                    <a asp-action="PackageList" asp-controller="Package" asp-area="Dashboard" class="nav-link">
+                                        <i class="nav-icon far fa-angle-double-right"></i>
+                                        <p>Packages</p>
+                                    </a>
+                                </li>
+                            </ul>
+
+                        </li>
+                        <li class="nav-item has-treeview" id="SalesAgents">
+                            <a href="#" class="nav-link">
+                                <i class="fas fa-piggy-bank"></i>
+                                <p>
+                                    Sales Agent
+                                    <i class="right fas fa-angle-left"></i>
+                                </p>
+                            </a>
+                            <ul class="nav nav-treeview">
+                                <li class="nav-item" id="SalesAgent">
+                                    <a asp-action="PackageList" asp-controller="Sales" asp-area="Dashboard" class="nav-link">
+                                        <i class="nav-icon far fa-angle-double-right"></i>
+                                        <p>Packages</p>
+                                    </a>
+                                </li>
+                            </ul>
+
+                        </li>
+                        <li class="nav-item has-treeview" id="SalesReports">
+                            <a href="#" class="nav-link">
+                                <i class="fas fa-piggy-bank"></i>
+                                <p>
+                                    Sales
+                                    <i class="right fas fa-angle-left"></i>
+                                </p>
+                            </a>
+                            <ul class="nav nav-treeview">
+                                <li class="nav-item" id="SalesReport">
+                                    <a asp-action="SalesList" asp-controller="Sales" asp-area="Dashboard" class="nav-link">
+                                        <i class="nav-icon far fa-angle-double-right"></i>
+                                        <p>Sales List</p>
+                                    </a>
+                                </li>
+                            </ul>
+                        </li>
+                        <li class="nav-item has-treeview" id="AccountingMain">
+                            <a href="#" class="nav-link">
+                                <i class="fas fa-piggy-bank"></i>
+                                <p>
+                                    Accounting
+                                    <i class="right fas fa-angle-left"></i>
+                                </p>
+                            </a>
+                            <ul class="nav nav-treeview">
+                                <li class="nav-item" id="AccountingSalesReports">
+                                    <a asp-action="SalesReports" asp-controller="Accounting" asp-area="Dashboard" class="nav-link">
+                                        <i class="nav-icon far fa-angle-double-right"></i>
+                                        <p>Sales Reports</p>
+                                    </a>
+                                </li>
+                                <li class="nav-item" id="AccountReports">
+                                    <a asp-action="AccountReports" asp-controller="Accounting" asp-area="Dashboard" class="nav-link">
+                                        <i class="nav-icon far fa-angle-double-right"></i>
+                                        <p>Account Reports</p>
+                                    </a>
+                                </li>
+                            </ul>
+                        </li>
+                    </ul>
+                </nav>
+                <!-- /.sidebar-menu -->
+            </div>
+            <!-- /.sidebar -->
+        </aside>
+
+        <!-- Content Wrapper. Contains page content -->
+        <div class="content-wrapper">
+            <!-- Content Header (Page header) -->
+            <div class="content-header">
+                <div class="container-fluid">
+                    <div class="row mb-2">
+                        <div class="col-sm-6">
+                            <h1 class="m-0 ">@ViewData["Title"]</h1>
+                        </div><!-- /.col -->
+
+                    </div><!-- /.row -->
+                </div><!-- /.container-fluid -->
+            </div>
+            <!-- /.content-header -->
+            <!-- Main content -->
+            <div class="content">
+                <div class="container-fluid">
+
+                    @RenderBody()
+                    <!-- /.row -->
+                </div><!-- /.container-fluid -->
+            </div>
+            <!-- /.content -->
+        </div>
+        <!-- /.content-wrapper -->
+        <!-- Control Sidebar -->
+        <aside class="control-sidebar control-sidebar-dark">
+            <!-- Control sidebar content goes here -->
+            <div class="p-3">
+                <h5>Title</h5>
+                <p>Sidebar content</p>
+            </div>
+        </aside>
+        <!-- /.control-sidebar -->
+        <!-- Main Footer -->
+        <footer class="main-footer">
+            <!-- To the right -->
+            <div class="float-right d-none d-sm-inline">
+                Anything you want
+            </div>
+            <!-- Default to the left -->
+            <strong></strong> All rights reserved.
+        </footer>
+    </div>
+    <!-- ./wrapper -->
+    <!-- REQUIRED SCRIPTS -->
+    <!-- jQuery -->
+    <script src="~/dashboard/plugins/jquery/jquery.min.js"></script>
+    <!-- Bootstrap 4 -->
+    <script src="~/dashboard/plugins/bootstrap/js/bootstrap.bundle.min.js"></script>
+    <!-- Multiselect Bootstrap -->
+    <script src="~/bootstrap-multiselect/js/bootstrap-multiselect.js"></script>
+    <!-- AdminLTE App -->
+    <script src="~/dashboard/dist/js/adminlte.min.js"></script>
+    <!-- DataTable Js -->
+    <script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/1.10.24/js/jquery.dataTables.js"></script>
+    <script type="text/javascript" charset="utf8" src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.18.1/moment.min.js"></script>
+    <script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/datetime/1.1.1/js/dataTables.dateTime.min.js"></script>
+    <script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/plug-ins/1.11.4/sorting/datetime-moment.js"></script>
+    <!-- Toastr Js -->
+    <script src="~/dashboard/plugins/toastr/toastr.min.js"></script>
+
+    @Html.Partial("_NotificationPartial")
+    @RenderSection("scripts", false)
+    <script>
+
+        $(function () {
+
+            $(".nav-link").on("click", function () {
+
+                var parentid = $(this).parents(".has-treeview").attr('id');
+                var id = $(this).parent().attr('id');
+                sessionStorage.setItem("parentid", parentid);
+                sessionStorage.setItem("id", id);
+            });
+
+            $(window).on("load", function () {
+                var parentidNo = sessionStorage.getItem("parentid");
+                var idNo = sessionStorage.getItem("id");
+                $("#" + parentidNo).addClass("menu-open");
+                $("#" + parentidNo + " a").first().addClass("active");
+                $("#" + idNo + " a").addClass("active");
+            });
+
+            $(".brand-link").click(function () {
+                sessionStorage.setItem("parentid", "");
+                sessionStorage.setItem("id", "");
+            });
+
+            $(".logout").click(function () {
+                sessionStorage.setItem("parentid", "");
+                sessionStorage.setItem("id", "");
+            });
+
+            $('[data-toggle="tooltip"]').tooltip();
+        });
+
+    </script>
+</body>
+</html>

@@ -1,0 +1,96 @@
+﻿@using Microsoft.AspNetCore.Http;
+@inject IHttpContextAccessor HttpContextAccessor
+@{
+
+    TempData["login"] = HttpContextAccessor.HttpContext.Session.GetString("login");
+    string username = "";
+    string role = "";
+    if (TempData["login"] != null)
+    {
+        string[] usernameAndRole = TempData["login"].ToString().Split(',');
+        username = usernameAndRole[0];
+        role = usernameAndRole[1];
+    }
+
+}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] </title>
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="~/dashboard/plugins/fontawesome-free/css/all.min.css">
+    <link rel="stylesheet" href="~/css/site.css" />
+    <link href="~/dashboard/plugins/toastr/toastr.css" rel="stylesheet" />
+
+    <style>
+        .fa-linkedin:hover {
+            opacity: 0.6;
+        }
+    </style>
+</head>
+<body>
+    <header>
+
+        <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
+            <div class="container">
+                <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">UI</a>
+                <button class="navbar-toggler" type="button" data-toggle="collapse" data-target=".navbar-collapse" aria-controls="navbarSupportedContent"
+                        aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                <div class="navbar-collapse collapse d-sm-inline-flex flex-sm-row-reverse">
+
+                    <ul class="navbar-nav flex-grow-0">
+                        @if (TempData["login"] != null)
+                        {
+
+                            <span class="text-muted"> Welcome <br /> @username </span>
+
+                            <li class="nav-item ml-1">
+                                <a asp-action="Login" asp-controller="Account" class="btn btn-outline-secondary nav-link">Dashboard</a>
+                            </li>
+
+                            <li class="nav-item ml-1">
+                                <a class="btn btn-outline-success nav-link" asp-action="LogOut" asp-controller="Account">LogOut</a>
+                            </li>
+                        }
+                        else
+                        {                          
+                            <li class="nav-item ml-1 mt-1">
+                                <a class="btn btn-outline-success nav-link" asp-action="Login" asp-controller="Account">Login</a>
+                            </li>
+                        }
+
+                    </ul>
+
+                    <ul class="navbar-nav flex-grow-1">
+                        <li class="nav-item">
+                            <a class="nav-link text-dark" href="https://www.linkedin.com/in/tayfun-engin-a21b7423/"> <i class="fab fa-linkedin fa-2x" style="color:#0A66C2;"></i></a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </nav>
+    </header>
+    <div class="container">
+        <main role="main" class="pb-3">
+            @RenderBody()
+        </main>
+    </div>
+
+    <footer class="border-top footer text-muted">
+        <div class="container">
+            &copy; 2022 - Travel Agency App
+        </div>
+    </footer>
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="~/js/site.js" asp-append-version="true"></script>
+    <script src="~/dashboard/plugins/toastr/toastr.min.js"></script>
+    @Html.Partial("_NotificationPartial")
+    @RenderSection("Scripts", required: false)
+</body>
+</html>

@@ -1,0 +1,13 @@
+{
+  "version": 2,
+  "dgSpecHash": "zGeSEcs173F58VHtk9rfHwlWXnTnJ2Pn0WRXPh2bWuTq4cvAvKbIHxhPlXdf2c0M2sbVr4pFFYP4KXUchRkqaA==",
+  "success": true,
+  "projectFilePath": "C:\\Users\\Tayfun\\Documents\\.NET EĞİTİM\\Resital\\TravelAgencyApplication\\Common\\Common.csproj",
+  "expectedPackageFiles": [
+    "C:\\Users\\Tayfun\\.nuget\\packages\\microsoft.aspnetcore.http.features\\5.0.13\\microsoft.aspnetcore.http.features.5.0.13.nupkg.sha512",
+    "C:\\Users\\Tayfun\\.nuget\\packages\\microsoft.extensions.primitives\\5.0.1\\microsoft.extensions.primitives.5.0.1.nupkg.sha512",
+    "C:\\Users\\Tayfun\\.nuget\\packages\\system.io.pipelines\\5.0.1\\system.io.pipelines.5.0.1.nupkg.sha512",
+    "C:\\Users\\Tayfun\\.nuget\\packages\\system.runtime.compilerservices.unsafe\\5.0.0\\system.runtime.compilerservices.unsafe.5.0.0.nupkg.sha512"
+  ],
+  "logs": []
+}

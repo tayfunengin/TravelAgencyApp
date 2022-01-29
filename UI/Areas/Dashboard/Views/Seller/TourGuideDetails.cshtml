@@ -1,0 +1,110 @@
+﻿@model TourGuide
+@{
+    Layout = "~/Areas/Dashboard/Views/Shared/_DashboardLayout.cshtml";
+}
+
+<div class="card">
+    <div class="card-header col-lg-12">
+        <div class="row">
+            <div class="col-md-9">
+                <h4>@Model.TourGuideName - Details</h4>
+            </div>
+            <div class="col-md-3 text-right">
+                <a href="/Dashboard/Seller/TourGuideList" data-toggle="tooltip" title="Go Back" data-placement="bottom" class="back">
+                    <i class="fas fa-arrow-left fa-2x text-muted"></i>
+                </a>
+            </div>
+        </div>
+    </div>
+    <div class="card-body col-lg-12">
+
+        <div>
+            <div class="row my-3">
+                <div class="col-md-9">
+                    <h5>Price List</h5>
+                </div>
+                <div class="col-md-3 text-right">
+                    <a asp-action="CreateTourGuidePrice" asp-controller="Price" asp-route-tourGuideId="@Model.Id" data-toggle="tooltip" title="Add New" data-placement="bottom" class="add">
+                        <i class="fas fa-plus fa-2x text-muted"></i>
+                    </a>
+                </div>
+            </div>
+            <table id="tourGuidePriceTable" class="table table-hover table-responsive-md">
+                <thead>
+                    <tr>
+                        <th></th>
+                        <th></th>
+                        <th>Year</th>
+                        <th>Period</th>
+                        <th>Purchase Price</th>
+                        <th>Sale Price</th>
+                        <th>Created Date</th>
+                        <th>Created Ip Address</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var price in Model.Prices)
+                    {
+                        string bgColor = price.Status == Convert.ToBoolean(Domain.Enums.Status.Active) ? "success" : "danger";
+                    <tr class="@bgColor">
+                        <td>
+                            <a asp-action="EditTourGuidePrice" asp-controller="Price" asp-area="Dashboard" asp-route-id=@price.Id class="text-success edit" data-toggle="tooltip" title="Edit" data-placement="bottom">
+                                <i class="far fa-edit text-primary"></i>
+                            </a>
+                        </td>
+                        <td>
+                            @if (price.Status == Convert.ToBoolean(Domain.Enums.Status.Active))
+                            {
+                                <a asp-action="DeleteTourGuidePrice" asp-controller="Price" asp-area="Dashboard" asp-route-id=@price.Id data-toggle="tooltip" title="Delete" data-placement="bottom" class="delete">
+                                    <i class="far fa-trash-alt text-danger"></i>
+                                </a>
+                            }
+                        </td>
+                        <td>@price.Year</td>
+                        <td>@price.Period</td>
+                        <td>@price.PurchasePrice &euro;</td>
+                        <td>@price.SalePrice &euro;</td>
+                        <td>@price.AddedDate.ToShortDateString()</td>
+                        <td>@price.CreatedIpAddress</td>
+                    </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+</div>
+
+
+
+@section scripts{
+    <script>
+
+        $(document).ready(function () {
+
+            $('#tourGuidePriceTable').DataTable();
+            $(".delete").click(function (e) {
+
+                var isOK = confirm("Listeden kaldırmak istediğinize emin misiniz?")
+                if (!isOK) {
+                    e.preventDefault();
+                }
+                sessionStorage.setItem("parentid", "Sellers");
+                sessionStorage.setItem("id", "TourGuide");
+            });
+            $(".add").click(function () {
+                sessionStorage.setItem("parentid", "Sellers");
+                sessionStorage.setItem("id", "TourGuide");
+            });
+            $(".back").click(function () {
+                sessionStorage.setItem("parentid", "Sellers");
+                sessionStorage.setItem("id", "TourGuide");
+            });
+            $(".edit").click(function () {
+                sessionStorage.setItem("parentid", "Sellers");
+                sessionStorage.setItem("id", "TourGuide");
+            });
+        });
+    </script>
+
+}

@@ -1,0 +1,89 @@
+﻿@model Hotel
+@{
+    Layout = "~/Areas/Dashboard/Views/Shared/_DashboardLayout.cshtml";
+}
+
+<div class="container">
+    <div class="row">
+        <div class="col-md-9">
+            <h5>Hotel: @Model.HotelName </h5>
+        </div>
+        <div class="col-md-3 text-right">
+            <a href="/Dashboard/Seller/HotelDetails/@Model.Id" data-toggle="tooltip" title="Go Back" data-placement="bottom" class="back">
+                <i class="fas fa-arrow-left fa-2x text-muted mr-2"></i>
+            </a>
+            <a asp-action="AddPhotoToHotel" asp-controller="Seller" asp-route-id="@Model.Id" data-toggle="tooltip" title="Add New" data-placement="bottom" class="add">
+                <i class="fas fa-plus fa-2x text-muted"></i>
+            </a>
+        </div>
+    </div>
+    <div class="row mt-3">
+
+        @if (Model.Photographies.Count == 0)
+        {
+            <div class="text-center">
+                <span class="alert-info">
+                    Galery is empty.
+                </span>
+            </div>
+        }
+        else
+        {
+            <div class="card-columns">
+                @foreach (var photo in Model.Photographies)
+                {
+                    <div class="card">
+                        <div class="card-header">
+                            @photo.Title
+                        </div>
+                        <img src="/images/hotelImage/@photo.Path" alt="@photo.Title" class="card-img-top img-thumbnail hotelGalleryPhoto">
+
+                        <div class="card-footer">
+                            <div class="row">
+                                <div class="col-sm-6">
+                                    <a asp-action="ArrangeAsProfilePhoto" asp-controller="Seller" asp-route-id="@photo.Id" asp-route-hotelId="@Model.Id" class="btn btn-primary btn-sm profile">Make ProfilePhoto</a>
+                                </div>
+                                <div class="col-sm-6">
+                                    <a asp-action="DeletePhotoFromHotel" asp-controller="Seller" asp-route-id="@photo.Id" asp-route-hotelId="@Model.Id" class="btn btn-danger btn-sm delete">Delete Photo</a>
+                                </div>
+                            </div>                           
+                        </div>
+
+                    </div>
+                }
+            </div>
+        }
+    </div>
+</div>
+
+@section scripts
+{
+    <script>
+
+        $(function () {
+
+            $(".delete").click(function (e) {
+
+                var isOK = confirm("Fotoğrafı silmek istiyor musunuz?")
+
+                if (!isOK) {
+                    e.preventDefault();
+                }
+            });
+            $(".profile").click(function (e) {
+
+                var isOK = confirm("Profile fotoğrafı yapmak istiyor musunuz?")
+
+                if (!isOK) {
+                    e.preventDefault();
+                }
+            });
+            sessionStorage.setItem("parentid", "Sellers");
+            sessionStorage.setItem("id", "Hotel");
+        });
+
+
+    </script>
+
+}
+

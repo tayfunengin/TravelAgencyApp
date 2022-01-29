@@ -1,0 +1,117 @@
+﻿
+@{
+    ViewData["Title"] = "Dashboard HomePage";
+    Layout = "~/Areas/Dashboard/Views/Shared/_DashboardLayout.cshtml";
+
+    List<AppUser> users = TempData["users"] as List<AppUser>;
+    List<AppUserRole> roles = TempData["roles"] as List<AppUserRole>;
+    List<Hotel> hotels = TempData["hotels"] as List<Hotel>;
+    List<FlightCompany> flightCompanies = TempData["flightCompanies"] as List<FlightCompany>;
+    List<TransportationCompany> transportationCompanies = TempData["transportationCompanies"] as List<TransportationCompany>;
+    List<TourOperator> tourOperators = TempData["tourOperators"] as List<TourOperator>;
+    List<TourGuide> tourGuides = TempData["tourGuides"] as List<TourGuide>;
+    List<RentACarCompany> rentACarCompanies = TempData["rentACarCompanies"] as List<RentACarCompany>;
+    List<Sales> sales = TempData["sales"] as List<Sales>;
+}
+
+
+<div class="row">
+    <div class="col-lg-3 col-md-6">
+        <div class="card bg-primary text-white text-center">
+            <h1>
+                <a class="text-white" id="users" asp-action="Index" asp-controller="User">Users</a>
+            </h1>
+            <h2>@users.Count</h2>
+        </div>
+    </div>
+    <div class="col-lg-3 col-md-6">
+        <div class="card bg-primary text-white text-center">
+            <h1>
+                <a class="text-white" id="roles" asp-action="Index" asp-controller="Role">Roles</a>
+            </h1>
+            <h2>@roles.Count</h2>
+        </div>
+    </div>
+    <div class="col-lg-3 col-md-6">
+        <div class="card bg-success text-white text-center">
+            <h1>
+                Sellers
+            </h1>
+            <div class="card-body">
+                <ul class="list-group text-dark">
+                    <li class="list-group-item"><a class="text-dark" id="hotel" asp-action="HotelList" asp-controller="Seller">Hotel: @hotels.Count </a></li>
+                    <li class="list-group-item"><a class="text-dark" id="flightCompany" asp-action="FlightCompanyList" asp-controller="Seller"> Flight Company: @flightCompanies.Count </a></li>
+                    <li class="list-group-item"><a class="text-dark" id="tourOperator" asp-action="TourOperatorList" asp-controller="Seller"> Tour Operators:@tourOperators.Count </a></li>
+                    <li class="list-group-item"><a class="text-dark" id="rentACar" asp-action="RentACarCompanyList" asp-controller="Seller"> Rent A Car: @rentACarCompanies.Count </a></li>
+                    <li class="list-group-item"><a class="text-dark" id="tourGuide" asp-action="TourGuideList" asp-controller="Seller"> Tour Guide: @tourGuides.Count </a></li>
+                    <li class="list-group-item"><a class="text-dark" id="transportationCompany" asp-action="TransportationCompanyList" asp-controller="Seller"> Transportation Company: @transportationCompanies.Count </a></li>
+                </ul>
+            </div>
+
+        </div>
+    </div>
+    <div class="col-lg-3 col-md-6">
+        <div class="card bg-warning text-white text-center">
+            <h1>
+                <a class="text-white" id="sale" asp-action="SalesList" asp-controller="Sales">Sales</a>
+            </h1>
+            <h2>@sales.Count</h2>
+        </div>
+    </div>
+</div>
+
+@section scripts{
+    <script>
+
+        $(document).ready(function () {
+
+            $("#users").click(function (e) {
+
+                sessionStorage.setItem("parentid", "Authorization");
+                sessionStorage.setItem("id", "UserList");
+            });
+            $("#roles").click(function (e) {
+
+                sessionStorage.setItem("parentid", "Authorization");
+                sessionStorage.setItem("id", "RoleList");
+            });
+            $("#hotel").click(function (e) {
+
+                sessionStorage.setItem("parentid", "Sellers");
+                sessionStorage.setItem("id", "Hotel");
+            });
+            $("#flightCompany").click(function (e) {
+
+                sessionStorage.setItem("parentid", "Sellers");
+                sessionStorage.setItem("id", "FlightCompany");
+            });
+            $("#tourOperator").click(function (e) {
+
+                sessionStorage.setItem("parentid", "Sellers");
+                sessionStorage.setItem("id", "TourOperator");
+            });
+            $("#rentACar").click(function (e) {
+
+                sessionStorage.setItem("parentid", "Sellers");
+                sessionStorage.setItem("id", "RentACarCompany");
+            });
+            $("#tourGuide").click(function (e) {
+
+                sessionStorage.setItem("parentid", "Sellers");
+                sessionStorage.setItem("id", "TourGuide");
+            });
+            $("#transportationCompany").click(function (e) {
+
+                sessionStorage.setItem("parentid", "Sellers");
+                sessionStorage.setItem("id", "TransportationCompany");
+            });
+
+            $("#sale").click(function (e) {
+                sessionStorage.setItem("parentid", "SalesReports");
+                sessionStorage.setItem("id", "SalesReport");
+            });
+          
+        });
+
+    </script>
+}

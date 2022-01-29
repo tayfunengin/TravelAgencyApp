@@ -1,0 +1,126 @@
+﻿@model Package
+@{
+    Layout = "~/Areas/Dashboard/Views/Shared/_DashboardLayout.cshtml";
+
+    var date = DateTime.Now;
+    var startYear = date.Year;
+    string startMonth = date.Month.ToString();
+    if (startMonth.ToCharArray().Length < 2)
+        startMonth = "0" + startMonth;
+
+    var startDay = date.Day.ToString();
+
+    if (startDay.ToCharArray().Length < 2)
+    {
+        startDay = "0" + date;
+    }
+}
+
+<div class="card col-lg-9 mx-auto">
+    <div class="card-header">
+        <div class="row">
+            <div class="col-md-9">
+                <h4>Create Package</h4>
+            </div>
+            <div class="col-md-3 text-right">
+                <a href="@TempData["referer"]" data-toggle="tooltip" title="Go Back" data-placement="bottom">
+                    <i class="fas fa-arrow-left fa-2x text-muted"></i>
+                </a>
+            </div>
+        </div>
+    </div>
+    <div class="card-body">     
+        <form asp-action="Create" method="post">
+            @Html.AntiForgeryToken()
+            <div class="row">
+                <div class="form-group col-lg-6">
+                    <span asp-validation-for="PackageName" class="text-danger"></span>
+                    <label asp-for="PackageName"></label>
+                    <input asp-for="PackageName" class="form-control" />
+                </div>
+                <div class="col-lg-6">
+                    <span asp-validation-for="Year" class="text-danger"></span>
+                    <label asp-for="Year"></label>
+                    <input asp-for="Year" type="number" min="0" class="form-control" />
+                </div>
+            </div>        
+            <div class="row">
+                <div class="form-group col-lg-6">
+                    <div class="row">
+                        <span asp-validation-for="RegionId" class="text-danger"></span>
+                        <label asp-for="Region"></label>
+                        @Html.DropDownListFor(x => x.RegionId, ViewBag.Regions as SelectList, "Please Choose", new { @class = "form-control" })
+                    </div>
+                </div>
+                <div class="form-group col-lg-6">
+                    <span asp-validation-for="Period" class="text-danger"></span>
+                    <label asp-for="Period"></label>
+                    <select asp-for="Period" asp-items="Html.GetEnumSelectList<Domain.Enums.Period>()" class="form-control">
+                        <option selected="selected" value="">Please Choose</option>
+                    </select>
+                </div>
+            </div>
+            <div class="form-group row">
+                <div class="col-lg-6">
+                    <span asp-validation-for="CheckInDate" class="text-danger"></span>
+                    <label asp-for="CheckInDate"></label>
+                    <input asp-for="CheckInDate" type="date" id="beginDate" class="form-control" min="@startYear-@startMonth-@startDay"/>
+                </div>
+                <div class="col-lg-6">
+                    <span asp-validation-for="CheckOutDate" class="text-danger"></span>
+                    <label asp-for="CheckOutDate"></label>
+                    <input asp-for="CheckOutDate" type="date" id="endDate" class="form-control" min="@startYear-@startMonth-@startDay" />
+                </div>
+            </div>
+            <div class="form-group row">
+                <div class="col-lg-6">
+                    <span asp-validation-for="GuestCount" class="text-danger"></span>
+                    <label asp-for="GuestCount"></label>
+                    <select asp-for="GuestCount" class="form-control">
+                        <option value="">Please Choose</option>
+                        <option id="1" value="1">1</option>
+                        <option id="2" value="2">2</option>
+                        <option id="3" value="3">3</option>
+                    </select>
+                </div>
+                <div class="col-lg-6">
+                    <span asp-validation-for="Quota" class="text-danger"></span>
+                    <label asp-for="Quota"></label>
+                    <input asp-for="Quota" type="number" min="0" class="form-control" />
+                </div>
+            </div>
+
+            <div class="col-lg-12">
+                <button type="submit" class="btn btn-outline-primary mt-2 " id="create">Create</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+
+@section scripts{
+
+    <script>
+import { get } from "jquery";
+
+
+        $(document).ready(function () {
+
+            $("#create").click(function (e) {
+
+                var begin = $("#beginDate").val();
+                var end = $("#endDate").val();
+
+                if (end != "") {
+                    if (begin > end) {
+                        alert("End date can not be earlier than start date!")
+                        e.preventDefault();
+                    }
+                }             
+            });
+        });
+
+    </script>
+
+}
+

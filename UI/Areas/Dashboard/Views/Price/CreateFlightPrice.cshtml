@@ -1,0 +1,82 @@
+﻿@model  FlightPrice
+@{   
+    Layout = "~/Areas/Dashboard/Views/Shared/_DashboardLayout.cshtml";
+}
+
+<div class="card col-lg-9 mx-auto">
+    <div class="card-header">
+        <div class="row">
+            <div class="col-md-9">
+                <h4>Create Flight Price</h4>
+            </div>
+            <div class="col-md-3 text-right">
+                <a href="@TempData["referer"]" data-toggle="tooltip" title="Go Back" data-placement="bottom">
+                    <i class="fas fa-arrow-left fa-2x text-muted"></i>
+                </a>
+            </div>
+        </div>
+    </div>
+    <div class="card-body">
+        <form asp-action="CreateFlightPrice" method="post">
+            @Html.AntiForgeryToken()
+            <div class="form-group">
+                <div class="row">
+                    <div class="col-lg-4">
+                        <span asp-validation-for="RouteId" class="text-danger"></span>
+                        <label>Route</label>
+                    </div>
+                    <div class="col-lg-8">
+                        <select id="dropDownListRoute" asp-for="RouteId" asp-items="@TempData["routes"] as SelectList" class="form-control">
+                            <option selected="selected" value="">Please Choose</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="row">
+                    <div class="col-lg-4">
+                        <span asp-validation-for="PlaneId" class="text-danger"></span>
+                        <label>Plane</label>
+                    </div>
+                    <div class="col-lg-8">
+                        <select id="dropDownListPlane" asp-for="PlaneId" asp-items="@TempData["planes"] as SelectList" class="form-control">
+                            <option selected="selected" value="">Please Choose</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="form-group col-lg-6">
+                    <span asp-validation-for="Year" class="text-danger"></span>
+                    <label asp-for="Year"></label>
+                    <input asp-for="Year" type="number" min="0" class="form-control" />
+                </div>
+                <div class="form-group col-lg-6">
+                    <span asp-validation-for="Period" class="text-danger"></span>
+                    <label asp-for="Period"></label>
+                    <select asp-for="Period" asp-items="Html.GetEnumSelectList<Domain.Enums.Period>()" class="form-control">
+                        <option selected="selected" value="">Please Choose</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="form-group col-lg-6">
+                    <span asp-validation-for="PurchasePrice" class="text-danger"></span>
+                    <label asp-for="PurchasePrice"></label>
+                    <input asp-for="PurchasePrice" type="number" min="0" class="form-control" />
+                </div>
+                <div class="form-group col-lg-6">
+                    <span asp-validation-for="SalePrice" class="text-danger"></span>
+                    <label asp-for="SalePrice"></label>
+                    <input asp-for="SalePrice" type="number" min="0" class="form-control" />
+                </div>
+            </div>
+
+            <div class="col-lg-12">
+                <button type="submit" class="btn btn-outline-primary mt-2 ">Create</button>
+            </div>
+        </form>
+    </div>
+</div>

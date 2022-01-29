@@ -1,0 +1,58 @@
+﻿@model List<AppUser> 
+@{ 
+    Layout = "~/Areas/Dashboard/Views/Shared/_DashboardLayout.cshtml";
+}
+
+
+<div class="card">
+    <div class="card-header">
+        <div class="row">
+            <div class="col-md-9">
+                <h4>User List For Role:  @TempData["Role"]</h4>
+            </div>
+            <div class="col-md-3 text-right">
+                <a asp-action="Index" asp-controller="Role" class="btn btn-default">Back to List</a>
+            </div>
+        </div>
+    </div>
+    <div class="card-body">        
+            <table id="roleTable" class="table table-bordered table-responsive-md">
+                <thead>
+                    <tr>
+                        <th>Username</th>
+                        <th>Name</th>
+                        <th>Surname</th>
+                        <th>Email</th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var user in Model)
+                    {
+                        <tr>
+                            <td>@user.UserName</td>
+                            <td>@user.FirstName</td>
+                            <td>@user.LastName</td>
+                            <td>@user.Email</td>
+                            <td>
+                                <a asp-action="RemoveRoleFromUser" asp-controller="Role" asp-route-userId="@user.Id" asp-route-role="@TempData["Role"].ToString()" class="btn btn-outline-danger" >Unassign The User</a>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>        
+    </div>
+</div>
+
+
+@section scripts{
+    <script>
+
+        $(document).ready(function () {
+            $('#roleTable').DataTable();
+        });
+
+    </script>
+
+}
+

@@ -1,0 +1,100 @@
+﻿@model Customer
+@{
+    Layout = "~/Areas/Dashboard/Views/Shared/_DashboardLayout.cshtml";
+    Package package = TempData["package"] as Package;
+}
+
+<div class="card">
+    <div class="card-header col-lg-12">
+        <div class="row">
+            <div class="col-md-9">
+                <table class="table">
+                    <tbody>
+                        <tr>
+                            <th>Package Name :</th>
+                            <td>@package.PackageName</td>
+                            <th>Region :</th>
+                            <td>@package.Region.RegionName</td>
+                        </tr>
+                        <tr>
+                            <th>Check-In :</th>
+                            <td>@package.CheckInDate.ToShortDateString()</td>
+                            <th>Check-Out :</th>
+                            <td>@package.CheckOutDate.ToShortDateString()</td>
+                        </tr>
+                        <tr>
+                            <th>Night Count :</th>
+                            <td>@package.NightCount</td>
+                            <th>Guest Count :</th>
+                            <td>@package.GuestCount</td>
+                        </tr>
+                        <tr>
+                            <th>Period :</th>
+                            <td>@package.Period</td>
+                            <th>Total Price :</th>
+                            <td>@package.Total Eur - @TempData["totalTl"] TL </td>
+                        </tr>                    
+                    </tbody>
+                </table>
+            </div>
+            <div class="col-md-3 text-right">
+                <a href="@TempData["referer"]" data-toggle="tooltip" title="Go Back" data-placement="bottom" class="back">
+                    <i class="fas fa-arrow-left fa-2x text-muted"></i>
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="card">
+    <form method="post" asp-route-packageId="@package.Id">
+        <div class="card-header">
+            <h5>Contact Information</h5>
+        </div>
+        <div class="card-body">           
+                <div class="row">
+                    <div class="form-group col-md-3 col-sm-6">
+                        <span asp-validation-for="@Model.Name" class="text-danger"></span>
+                        <label asp-for="@Model.Name"></label>
+                        <input asp-for="@Model.Name" name="name" class="form-control" />
+                    </div>
+                    <div class="form-group col-md-3 col-sm-6">
+                        <span asp-validation-for="@Model.Surname" class="text-danger"></span>
+                        <label asp-for="@Model.Surname"></label>
+                        <input asp-for="@Model.Surname" class="form-control" />
+                    </div>                 
+                    <div class="form-group col-md-4 col-sm-6">
+                        <span asp-validation-for="@Model.Email" class="text-danger"></span>
+                        <label asp-for="@Model.Email"></label>
+                        <input asp-for="@Model.Email" class="form-control" />
+                    </div>
+                </div>            
+            <div class="col-lg-12">
+                <button type="submit" class="btn btn-outline-primary mt-2 ">Purchase</button>
+            </div>
+        </div>
+    </form>
+</div>
+
+
+@section scripts{
+    <script>
+
+        $(document).ready(function () {
+
+            $(".back").click(function () {
+                sessionStorage.setItem("parentid", "SalesAgents");
+                sessionStorage.setItem("id", "SalesAgent");
+            });
+        });
+
+        $.ajax({
+            type: "Get",
+            url: 'https://api.genelpara.com/embed/doviz.json',
+            success: function (data) {
+                console.log(data);
+            }
+        });
+
+    </script>
+}

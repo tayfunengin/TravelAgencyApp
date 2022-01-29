@@ -1,0 +1,102 @@
+﻿@model Hotel
+@{
+    Layout = "~/Areas/Dashboard/Views/Shared/_DashboardLayout.cshtml";
+}
+
+<div class="card col-lg-9 mx-auto">
+    <div class="card-header">
+        <div class="row">
+            <div class="col-md-9">
+                <h4>Create Hotel</h4>
+            </div>
+            <div class="col-md-3 text-right">
+                <a href="@TempData["referer"]" data-toggle="tooltip" title="Go Back" data-placement="bottom">
+                    <i class="fas fa-arrow-left fa-2x text-muted"></i>
+                </a>
+            </div>
+        </div>
+    </div>
+    <div class="card-body">
+        <div asp-validation-summary="All" class="text-danger">
+        </div>
+        <form asp-action="CreateHotel" method="post" enctype="multipart/form-data">
+            @Html.AntiForgeryToken()
+            <div class="row">
+                <div class="form-group col-lg-6">
+                    <label asp-for="HotelCode"></label>
+                    <input asp-for="HotelCode" class="form-control" />
+                </div>
+                <div class="form-group col-lg-6">
+                    <label asp-for="HotelName"></label>
+                    <input asp-for="HotelName" class="form-control" />
+                </div>
+            </div>
+         
+            <div class="form-group">
+                <label asp-for="Address"></label>
+                <input asp-for="Address" class="form-control" />
+            </div>
+            <div class="row">
+                <div class="form-group col-lg-6">
+                    <label>Hotel Profile Photo</label>
+                    <input type="file" name="formFile" class="form-control" />
+                </div>
+                <div class="form-group col-lg-6">
+                    <label asp-for="Region"></label>
+                    @Html.DropDownListFor(x => x.RegionId, TempData["regions"] as SelectList, "Please Choose", new { @class = "form-control" })
+                </div>
+            </div>           
+            <div class="form-group">
+                <div class="row">
+                    <div class="col-lg-4">
+                        <label>Room Location</label>
+                    </div>
+                    <div class="col-lg-8">
+                        <select id="dropDownListRoomLocation" name="roomLocationIds" asp-items="@TempData["roomLocations"] as SelectList" multiple class="form-control">
+                        </select>
+                    </div>
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="row">
+                    <div class="col-lg-4">
+                        <label>Room Type</label>
+                    </div>
+                    <div class="col-lg-8">
+                        <select id="dropDownListRoomType" name="roomTypeIds" asp-items="@TempData["roomTypes"] as SelectList" multiple class="form-control">
+                        </select>
+                    </div>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <div class="row">
+                    <div class="col-lg-4">
+                        <label>Accomodation Type</label>
+                    </div>
+                    <div class="col-lg-8">
+                        <select id="dropDownListAccomodationType" name="accomodationTypeIds" asp-items="@TempData["accomodationTypes"] as SelectList" multiple class="form-control">
+                        </select>
+                    </div>
+                </div>
+            </div>
+
+
+            <div class="col-lg-12">
+                <button type="submit" class="btn btn-outline-primary mt-2 ">Create</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+@section scripts{
+
+    <script>
+        $(document).ready(function () {
+            $('#dropDownListRoomLocation').multiselect();   
+            $('#dropDownListRoomType').multiselect(); 
+            $('#dropDownListAccomodationType').multiselect(); 
+        });
+    </script>
+
+}

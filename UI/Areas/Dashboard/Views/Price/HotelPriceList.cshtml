@@ -1,0 +1,61 @@
+﻿@model IEnumerable<HotelPrice>
+@{
+    Layout = "~/Areas/Dashboard/Views/Shared/_DashboardLayout.cshtml";
+
+}
+<div class="card">
+    <div class="card-header col-lg-12">
+        <div class="row">
+            <div class="col-md-9">
+                <h4>Hotels Price List</h4>
+            </div>    
+        </div>
+    </div>
+    <div class="card-body col-lg-12">
+        <table id="priceTable" class="table table-hover table-responsive-md">
+            <thead>
+                <tr>
+
+                    <th>Hotel Name</th>
+                    <th>Region</th>
+                    <th>Accomodation Type</th>
+                    <th>Room Location</th>
+                    <th>Room Type</th>
+                    <th>Year</th>
+                    <th>Period</th>     
+                    <th>Sale Price</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var hotelPrice in Model)
+                {
+                    string bgColor = hotelPrice.Status == Convert.ToBoolean(Domain.Enums.Status.Active) ? "success" : "danger";
+                <tr class="@bgColor">
+                    <td>@hotelPrice.Hotel.HotelName</td>
+                    <td>@hotelPrice.Hotel.Region.RegionName</td>
+                    <td>@hotelPrice.AccomodationType.Description</td>
+                    <td>@hotelPrice.RoomLocation.Description</td>
+                    <td>@hotelPrice.RoomType.Description</td>
+                    <td>@hotelPrice.Year</td>
+                    <td>@hotelPrice.Period</td>           
+                    <td>@hotelPrice.SalePrice &euro;</td>
+                </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>
+
+@section scripts{
+    <script>
+
+        $(document).ready(function () {
+
+            $('#priceTable').DataTable();
+        });
+    </script>
+
+}
+
+
+

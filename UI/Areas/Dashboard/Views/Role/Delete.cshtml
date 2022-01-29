@@ -1,0 +1,21 @@
+﻿@model AppUserRole
+@{    
+    Layout = "~/Areas/Dashboard/Views/Shared/_DashboardLayout.cshtml";
+}
+
+<div class="container">
+    <div class="text-center">
+        <div class="card">
+            <div class="card-header">
+                <form asp-action="Delete">
+                    @Html.AntiForgeryToken()
+                    <h4>Role: @Model.Name</h4>
+                    <p>Do you want to delete the role?</p>
+                    <button type="submit" class="btn btn-outline-danger">Yes</button>
+                    <a asp-action="Index" asp-controller="Role" class="btn btn-default">No</a>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+

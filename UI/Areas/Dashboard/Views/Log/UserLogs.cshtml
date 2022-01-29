@@ -1,0 +1,127 @@
+﻿
+@model IEnumerable<UserLog>
+@{
+    Layout = "~/Areas/Dashboard/Views/Shared/_DashboardLayout.cshtml";
+    DateTime todayDate = DateTime.Now;
+}
+
+<div class="card">
+    <div class="card-header col-lg-12">
+        <h5>Filters</h5>
+    </div>
+    <div class="card-body col-lg-12">
+        <form method="post" name="userLogs" id="userLogsForm">
+            <div class="row">
+                <div class="col-lg-4 col-md-6">
+                    <div class="form-group">
+                        <label>Begin Date:</label>
+                        <input type="text"  class="form-control" id="beginDate" name="beginDate" />
+                    </div>
+                </div>
+                <div class="col-lg-4 col-md-6">
+                    <div class="form-group">
+                        <label>End Date:</label>
+                        <input type="text"  class="form-control" id="endDate" name="endDate" />
+                    </div>
+                </div>      
+                <div class="col-lg-4 col-md-6">
+                    <div class="form-group">
+                        <label>UserName:</label>
+                        @Html.DropDownList("UserName", TempData["userNames"] as SelectList, "Please Choose", new { @class = "form-control" })
+                    </div>
+                </div>
+            </div>
+            <div class="row">                
+                <div class="col-lg-2 col-md-3">
+                    <div class="form-group">
+                        <label></label>
+                        <button type="submit" class="form-control btn btn-outline-secondary" id="filter">Filter</button>
+                    </div>
+                </div>
+                <div class="col-lg-2 col-md-3">
+                    <div class="form-group">
+                        <label></label>
+                        <button type="reset" class="form-control btn btn-default" id="resetButton">Clear Filters</button>
+                    </div>
+                </div>
+            </div>        
+        </form>
+    </div>
+</div>
+<div class="card">
+    <div class="card-header col-lg-12">
+        <div class="row">
+            <div class="col-md-9">
+                <h4>User Logs</h4>
+            </div>
+        </div>
+    </div>
+    <div class="card-body col-lg-12">
+        <table id="userLogTable" class="table table-hover table-responsive-md">
+            <thead>
+                <tr>
+                    <th>User Name</th>
+                    <th>Role</th>
+                    <th>Log Date</th>
+                    <th>Controller Name</th>
+                    <th>Action Name</th>
+                    <th>Description</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var log in Model)
+                {
+
+                <tr>
+                    <td>@log.UserName</td>
+                    <td>@log.Role</td>
+                    <td>@log.LogDate</td>
+                    <td>@log.ControllerName</td>
+                    <td>@log.ActionName</td>
+                    <td>@log.Description</td>
+                </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>
+
+@section scripts{
+
+    <script>   
+
+        $(document).ready(function () {
+
+            $("#resetButton").click(function () {
+                
+                $("#UserName option").removeAttr('selected');               
+            });           
+        
+            $('#userLogTable').DataTable();        
+
+            var minDate, maxDate, begin;
+            minDate = new DateTime($('#beginDate'), {
+                format: 'DD MM YYYY HH:mm'
+            });
+            maxDate = new DateTime($('#endDate'), {
+                format: 'DD MM YYYY HH:mm'
+            });
+
+            $("#filter").click(function (e) {
+
+                var begin = $("#beginDate").val();
+                var end = $("#endDate").val();
+                
+                if (end!="") {
+                    if (begin > end) {
+                        alert("End date cannot be earlier than begin date!")
+                        e.preventDefault();
+                    }
+                }
+                
+            });
+        });
+
+    </script>
+
+}

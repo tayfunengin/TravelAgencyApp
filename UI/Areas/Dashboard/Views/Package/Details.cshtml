@@ -1,0 +1,434 @@
+﻿@model Package
+@using Domain.Enums;
+@{
+    Layout = "~/Areas/Dashboard/Views/Shared/_DashboardLayout.cshtml";
+
+    decimal totalFlight = 0;
+    decimal totalTransportation = 0;
+    decimal totalTours = 0;
+}
+
+<div class="card">
+    <div class="card-header col-lg-12">
+        <div class="row">
+            <div class="col-md-9">
+                <table class="table">
+                    <tbody>
+                        <tr>
+                            <th>Package Name :</th>
+                            <td>@Model.PackageName</td>
+                            <th>Region :</th>
+                            <td>@Model.Region.RegionName</td>
+                        </tr>
+                        <tr>
+                            <th>Check-In :</th>
+                            <td>@Model.CheckInDate.ToShortDateString()</td>
+                            <th>Check-Out :</th>
+                            <td>@Model.CheckOutDate.ToShortDateString()</td>
+                        </tr>
+                        <tr>
+                            <th>Night Count :</th>
+                            <td>@Model.NightCount</td>
+                            <th>Guest Count :</th>
+                            <td>@Model.GuestCount</td>
+                        </tr>
+                        <tr>
+                            <th>Period :</th>
+                            <td>@Model.Period</td>
+                            <th>Quota :</th>
+                            <td>@Model.Quota</td>
+                        </tr>
+                        <tr>
+                            <th>Total Price :</th>
+                            <td>@Model.Total - Euro</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class="col-md-3 text-right">
+                <a href="/Dashboard/Package/PackageList" data-toggle="tooltip" title="Go Back" data-placement="bottom" class="back">
+                    <i class="fas fa-arrow-left fa-2x text-muted"></i>
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="card-body col-lg-12">
+    <ul class="nav nav-tabs" id="myTab" role="tablist">
+        <li class="nav-item active" role="presentation">
+            <a data-toggle="tab" href="#hotel" class="nav-link active" id="hotel-tab" data-bs-toggle="tab" type="button" role="tab" aria-controls="hotel" aria-selected="true">Hotel</a>
+        </li>
+        <li class="nav-item" role="presentation">
+            <a data-toggle="tab" href="#flight" class="nav-link" id="flight-tab" data-bs-toggle="tab" type="button" role="tab" aria-controls="flight" aria-selected="false">Flight</a>
+        </li>
+        <li class="nav-item" role="presentation">
+            <a data-toggle="tab" href="#transportation" class="nav-link" id="transportation-tab" data-bs-toggle="tab" type="button" role="tab" aria-controls="transportation" aria-selected="false">Transportation</a>
+        </li>
+        <li class="nav-item" role="presentation">
+            <a data-toggle="tab" href="#tour" class="nav-link" id="tour-tab" data-bs-toggle="tab" type="button" role="tab" aria-controls="tour" aria-selected="false">Tour</a>
+        </li>
+        <li class="nav-item" role="presentation">
+            <a data-toggle="tab" href="#rentACar" class="nav-link" id="rentACar-tab" data-bs-toggle="tab" type="button" role="tab" aria-controls="rentACar" aria-selected="false">Rent A Car</a>
+        </li>
+        <li class="nav-item" role="presentation">
+            <a data-toggle="tab" href="#tourGuide" class="nav-link" id="tourGuide-tab" data-bs-toggle="tab" type="button" role="tab" aria-controls="tourGuide" aria-selected="false">Tour Guide</a>
+        </li>
+    </ul>
+    <div class="tab-content" id="myTabContent">
+        <div class="tab-pane fade show active" id="hotel" role="tabpanel" aria-labelledby="hotel-tab">
+
+            @if (Model.HotelPriceId == null)
+            {
+                <div class="row my-1 float-right">
+                    <a asp-action="ChooseHotel" asp-controller="Package" asp-area="Dashboard" asp-route-id="@Model.Id" data-toggle="tooltip" title="Add New" data-placement="bottom" class="add">
+                        <i class="fas fa-plus fa-2x text-muted"></i>
+                    </a>
+                </div>
+            }
+            <table id="" class="table table-hover table-responsive-md">
+                <thead>
+                    <tr>
+                        <th></th>
+                        <th>Hotel Name</th>
+                        <th>AccomodationType</th>
+                        <th>Room Location</th>
+                        <th>Room Type</th>
+                        <th>Room Price (Eur)</th>
+                        <th>Nights</th>
+                        <th>Total (Eur)</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @if (Model.HotelPrice != null)
+                    {
+                        decimal? total = Model.HotelPrice.SalePrice * Model.NightCount;
+                        <tr>
+                            <td>
+                                <a asp-action="RemoveHotelPriceFromPackage" asp-controller="Package" asp-area="Dashboard" asp-route-hotelPriceId=@Model.HotelPriceId asp-route-packageId="@Model.Id" data-toggle="tooltip" title="Delete" data-placement="bottom" class="delete">
+                                    <i class="far fa-trash-alt text-danger"></i>
+                                </a>
+
+                            </td>
+                            <td>@Model.HotelPrice.Hotel.HotelName</td>
+                            <td>@Model.HotelPrice.AccomodationType.Description</td>
+                            <td>@Model.HotelPrice.RoomLocation.Description</td>
+                            <td>@Model.HotelPrice.RoomType.Description</td>
+                            <td>@Model.HotelPrice.SalePrice &euro;</td>
+                            <td>@Model.NightCount</td>
+                            <td>@total &euro;</td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+        <div class="tab-pane fade" id="flight" role="tabpanel" aria-labelledby="flight-tab">
+
+            @if (Model.FlightPrices.Count < 2)
+            {
+                <div class="row my-1 float-right">
+                    <a asp-action="ChooseFlight" asp-controller="Package" asp-route-id="@Model.Id" data-toggle="tooltip" title="Add New" data-placement="bottom" class="add">
+                        <i class="fas fa-plus fa-2x text-muted"></i>
+                    </a>
+                </div>
+            }
+            <table id="" class="table table-hover table-responsive-md">
+                <thead>
+                    <tr>
+                        <th></th>
+                        <th>Flight Company Name</th>
+                        <th>Plane</th>
+                        <th>Route</th>
+                        <th>Price Per Person (Eur)</th>
+                        <th>Guest Count</th>
+                        <th>Sub Total (Eur)</th>
+                        <th>Total (Eur)</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @if (Model.FlightPrices != null)
+                    {
+                        @foreach (var flight in Model.FlightPrices)
+                        {
+                            decimal subtotal;
+                            subtotal = flight.SalePrice * Model.GuestCount;
+                            totalFlight += subtotal;
+                            <tr>
+                                <td>
+                                    <a asp-action="RemoveFlightPriceFromPackage" asp-controller="Package" asp-area="Dashboard" asp-route-flightPriceId=@flight.Id asp-route-packageId="@Model.Id" data-toggle="tooltip" title="Delete" data-placement="bottom" class="delete">
+                                        <i class="far fa-trash-alt text-danger"></i>
+                                    </a>
+                                </td>
+                                <td>@flight.FlightCompany.FlightCompanyName</td>
+                                <td>@flight.Plane.Model</td>
+                                <td>@flight.Route.Description</td>
+                                <td>@flight.SalePrice &euro;</td>
+                                <td>@Model.GuestCount</td>
+                                <td>@subtotal &euro;</td>
+                            </tr>
+                        }
+                        @if (totalFlight > 0)
+                        {
+                            <tr>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td>
+                                    @totalFlight &euro;
+                                </td>
+                            </tr>
+                        }
+                    }
+                </tbody>
+            </table>
+        </div>
+        <div class="tab-pane fade" id="transportation" role="tabpanel" aria-labelledby="transportation-tab">
+            <div class="row my-3">
+                <div class="col-md-9">
+                    <h5></h5>
+                </div>
+                <div class="col-md-3 text-right">
+                    @if (Model.TransportationPrices.Count < 2)
+                    {
+                        <a asp-action="ChooseTransportation" asp-controller="Package" asp-route-id="@Model.Id" data-toggle="tooltip" title="Add New" data-placement="bottom" class="add">
+                            <i class="fas fa-plus fa-2x text-muted"></i>
+                        </a>
+                    }
+                </div>
+            </div>
+            <table id="" class="table table-hover table-responsive-md">
+                <thead>
+                    <tr>
+                        <th></th>
+                        <th>Transportation Company Name</th>
+                        <th>Route</th>
+                        <th>Price Per Person</th>
+                        <th>Guest Count</th>
+                        <th>Sub Total (Eur)</th>
+                        <th>Total (Eur)</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @if (Model.TransportationPrices != null)
+                    {
+                        @foreach (var transportation in Model.TransportationPrices)
+                        {
+                            decimal subtotal;
+                            subtotal = transportation.SalePrice * Model.GuestCount;
+                            totalTransportation += subtotal;
+                            <tr>
+                                <td>
+                                    <a asp-action="RemoveTransportationPriceFromPackage" asp-controller="Package" asp-area="Dashboard" asp-route-transportationPriceId=@transportation.Id asp-route-packageId="@Model.Id" data-toggle="tooltip" title="Delete" data-placement="bottom" class="delete">
+                                        <i class="far fa-trash-alt text-danger"></i>
+                                    </a>
+                                </td>
+                                <td>@transportation.TransportationCompany.TransportationCompanyName</td>
+                                <td>@transportation.Route.Description</td>
+                                <td>@transportation.SalePrice &euro;</td>
+                                <td>@Model.GuestCount</td>
+                                <td>@subtotal &euro;</td>
+                            </tr>
+                        }
+                        @if (totalTransportation > 0)
+                        {
+                            <tr>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td>@totalTransportation &euro;</td>
+                            </tr>
+                        }
+                    }
+
+                </tbody>
+            </table>
+        </div>
+
+        <div class="tab-pane fade" id="tour" role="tabpanel" aria-labelledby="tour-tab">
+
+
+            @if (Model.NightCount > Model.TourPrices.Count)
+            {
+                <div class="row my-1 float-right">
+                    <a asp-action="ChooseTour" asp-controller="Package" asp-route-Id="@Model.Id" data-toggle="tooltip" title="Add New" data-placement="bottom" class="add">
+                        <i class="fas fa-plus fa-2x text-muted"></i>
+                    </a>
+                </div>
+            }
+
+            <table id="" class="table table-hover table-responsive-md">
+                <thead>
+                    <tr>
+                        <th></th>
+                        <th>Tour Operator Name</th>
+                        <th>Tour Name</th>
+                        <th>Tour Date</th>
+                        <th>Price Per Person (Eur)</th>
+                        <th>Guest Count</th>
+                        <th>Sub Total (Eur)</th>
+                        <th>Total (Eur)</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @if (Model.TourPrices != null)
+                    {
+
+                        decimal subtotal;
+                        @foreach (var tourPrice in Model.TourPrices)
+                        {
+                            subtotal = tourPrice.SalePrice * Model.GuestCount;
+                            totalTours += subtotal;
+                            <tr>
+                                <td>
+                                    <a asp-action="RemoveTourOperatorPriceFromPackage" asp-controller="Package" asp-area="Dashboard" asp-route-tourOperatorPriceId=@tourPrice.Id asp-route-packageId=@Model.Id data-toggle="tooltip" title="Delete" data-placement="bottom" class="delete">
+                                        <i class="far fa-trash-alt text-danger"></i>
+                                    </a>
+                                </td>
+                                <td>@tourPrice.TourOperator.TourOperatorName</td>
+                                <td>@tourPrice.Tour.TourName</td>
+
+                                @foreach (var tourDate in Model.TourDates)
+                                {
+                                    if (tourDate.TourPriceId == tourPrice.Id && tourDate.Status == Convert.ToBoolean(Status.Active))
+                                    {
+                                        <td> @tourDate.TourDate.ToShortDateString()</td>
+                                        break;
+                                    }
+                                }
+
+                                <td>@tourPrice.SalePrice &euro;</td>
+                                <td>@Model.GuestCount</td>
+                                <td>@subtotal &euro;</td>
+                            </tr>
+                        }
+                        @if (totalTours > 0)
+                        {
+                            <tr>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td>@totalTours &euro;</td>
+                            </tr>
+                        }
+                    }
+
+                </tbody>
+            </table>
+        </div>
+        <div class="tab-pane fade" id="rentACar" role="tabpanel" aria-labelledby="rentACar-tab">
+
+            <table id="" class="table table-hover table-responsive-md">
+                <thead>
+                    <tr>
+                        <th></th>
+                        <th>Company Name</th>
+                        <th>Car Brand</th>
+                        <th>Car Model</th>
+                        <th>Price Per Day (Eur)</th>
+                        <th>Start Date</th>
+                        <th>End Date</th>
+                        <th>Day Count</th>
+                        <th>Total (Eur)</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @if (Model.RentACarPrice != null)
+                    {
+                        decimal? total = Model.RentACarPrice.SalePrice * Model.RentACarDayCount;
+                        <tr>
+                            <td>
+                                <a asp-action="RemoveRentACarPriceFromPackage" asp-controller="Package" asp-area="Dashboard" asp-route-rentACarPriceId=@Model.RentACarPriceId asp-route-packageId=@Model.Id data-toggle="tooltip" title="Delete" data-placement="bottom" class="delete">
+                                    <i class="far fa-trash-alt text-danger"></i>
+                                </a>
+                            </td>
+                            <td>@Model.RentACarPrice.RentACarCompany.RentACarCompanyName</td>
+                            <td>@Model.RentACarPrice.Car.Brand</td>
+                            <td>@Model.RentACarPrice.Car.Model</td>
+                            <td>@Model.RentACarPrice.SalePrice &euro;</td>
+                            <td>@Model.RentACarStartDate.Value.ToShortDateString()</td>
+                            <td>@Model.RentACarEndDate.Value.ToShortDateString()</td>
+                            <td>@Model.RentACarDayCount</td>
+                            <td>@total &euro;</td>
+                        </tr>
+                    }
+
+                </tbody>
+            </table>
+        </div>
+        <div class="tab-pane fade" id="tourGuide" role="tabpanel" aria-labelledby="tourGuide-tab">
+
+            <table id="" class="table table-hover table-responsive-md">
+                <thead>
+                    <tr>
+                        <th></th>
+                        <th>Name</th>
+                        <th>Surname</th>
+                        <th>Language</th>
+                        <th>Date</th>
+                        <th>Price (Eur)</th>
+                        <th>Total (Eur)</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @if (Model.TourGuidePrice != null)
+                    {
+                        decimal? total = Model.TourGuidePrice.SalePrice;
+                        <tr>
+                            <td>
+                                <a asp-action="RemoveTourGuidePriceFromPackage" asp-controller="Package" asp-area="Dashboard" asp-route-tourGuidePriceId=@Model.TourGuidePriceId asp-route-packageId=@Model.Id data-toggle="tooltip" title="Delete" data-placement="bottom" class="delete">
+                                    <i class="far fa-trash-alt text-danger"></i>
+                                </a>
+                            </td>
+                            <td>@Model.TourGuidePrice.TourGuide.TourGuideName</td>
+                            <td>@Model.TourGuidePrice.TourGuide.TourGuideSurname</td>
+                            <td>@Model.TourGuidePrice.TourGuide.Language</td>
+                            <td>@Model.TourGuideRentDay.Value.ToShortDateString()</td>
+                            <td>@Model.TourGuidePrice.SalePrice &euro;</td>
+                            <td>@total &euro;</td>
+                        </tr>
+                    }
+
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+
+@section scripts{
+    <script>
+
+        $(document).ready(function () {
+
+            $(".delete").click(function (e) {
+
+                var isOK = confirm("Listeden kaldırmak istediğinize emin misiniz?")
+                if (!isOK) {
+                    e.preventDefault();
+                }
+                sessionStorage.setItem("parentid", "Packages");
+                sessionStorage.setItem("id", "Package");
+            });
+            $(".add").click(function () {
+                sessionStorage.setItem("parentid", "Packages");
+                sessionStorage.setItem("id", "Package");
+            });
+            $(".back").click(function () {
+                sessionStorage.setItem("parentid", "Packages");
+                sessionStorage.setItem("id", "Package");
+            });
+        });
+
+    </script>
+}
+

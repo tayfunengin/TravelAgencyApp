@@ -1,0 +1,22 @@
+﻿@model AppUser
+@{
+    Layout = "~/Areas/Dashboard/Views/Shared/_DashboardLayout.cshtml";
+}
+
+<div class="container">
+    <div class="text-center">
+        <div class="card">
+            <div class="card-header">
+                <form asp-action="Delete">
+                    @Html.AntiForgeryToken()
+                    <h4>UserName: @Model.UserName</h4>
+                    <h4>Email: @Model.Email</h4>
+                    <p>Do you want to delete the user?</p>
+                    <button type="submit" class="btn btn-outline-danger">Yes</button>
+                    <a asp-action="Index" asp-controller="User" class="btn btn-default">No</a>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+

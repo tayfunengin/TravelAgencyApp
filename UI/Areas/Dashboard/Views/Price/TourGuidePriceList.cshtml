@@ -1,0 +1,56 @@
+﻿@model IEnumerable<TourGuidePrice> 
+@{
+    Layout = "~/Areas/Dashboard/Views/Shared/_DashboardLayout.cshtml";
+}
+
+<div class="card">
+    <div class="card-header col-lg-12">
+        <div class="row">
+            <div class="col-md-9">
+                <h4>Tour Guide Price</h4>
+            </div>
+        </div>
+    </div>
+    <div class="card-body col-lg-12">
+        <table id="priceTable" class="table table-hover table-responsive-md">
+            <thead>
+                <tr>
+                    <th>Tour Guide Name</th>
+                    <th>Tour Guide Surname</th>
+                    <th>Region</th>
+                    <th>Language</th>
+                    <th>Year</th>
+                    <th>Period</th>             
+                    <th>Sale Price</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var price in Model)
+                {
+                    string bgColor = price.Status == Convert.ToBoolean(Domain.Enums.Status.Active) ? "success" : "danger";
+                <tr class="@bgColor">
+                    <td>@price.TourGuide.TourGuideName </td>
+                    <td>@price.TourGuide.TourGuideSurname</td>
+                    <td>@price.TourGuide.Region.RegionName</td>
+                    <td>@price.TourGuide.Language</td>
+                    <td>@price.Year</td>
+                    <td>@price.Period</td>           
+                    <td>@price.SalePrice &euro;</td>
+                </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>
+
+@section scripts{
+    <script>
+
+        $(document).ready(function () {
+
+            $('#priceTable').DataTable();
+        });
+    </script>
+
+}
+

@@ -1,0 +1,155 @@
+﻿@model List<AccountBalance>
+@{
+
+    Layout = "~/Areas/Dashboard/Views/Shared/_DashboardLayout.cshtml";
+
+    DateTime now = DateTime.Now;
+    var endYear = now.Year;
+    string endMonth = now.Month.ToString();
+    if (endMonth.ToCharArray().Length < 2)
+        endMonth = "0" + endMonth;
+
+    string endDay = now.Day.ToString();
+
+    if (endDay.ToCharArray().Length < 2)
+    {
+        endDay = "0" + endDay;
+    }
+
+
+    decimal totalDept = 0;
+    decimal totalCredit = 0;
+    double totalBalance = 0;
+}
+
+
+<div class="card">
+    <div class="card-header col-lg-12">
+        <h5>Filters</h5>
+    </div>
+    <div class="card-body col-lg-12">
+        <form method="post" name="salesList" id="salesListForm">
+            <div class="row">
+                <div class="col-lg-4 col-md-6">
+                    <div class="form-group">
+                        <label>Begin Date</label>
+                        <input type="date" id="beginDate" name="beginDate" class="form-control" min="2020-01-01" max="@endYear.ToString()-@endMonth-@endDay" />
+                    </div>
+                </div>
+                <div class="col-lg-4 col-md-6">
+                    <div class="form-group">
+                        <label>End Date</label>
+                        <input type="date" id="endDate" name="endDate" class="form-control" min="2020-01-01" max="@endYear.ToString()-@endMonth-@endDay" />
+                    </div>
+                </div>
+                <div class="col-lg-4 col-md-6">
+                    <div class="form-group">
+                        <label>Sales Code</label>
+                        <input type="text" id="accountCode" name="accountCode" class="form-control" />
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-lg-2 col-md-3">
+                    <div class="form-group">
+                        <label></label>
+                        <button type="submit" class="form-control btn btn-outline-secondary" id="filter">Filter</button>
+                    </div>
+                </div>
+                <div class="col-lg-2 col-md-3">
+                    <div class="form-group">
+                        <label></label>
+                        <button type="reset" class="form-control btn btn-default" id="resetButton">Clear Filters</button>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+<div class="card">
+    <div class="card-header col-lg-12">
+        <div class="row">
+            <div class="col-md-9">
+                <h4>Account Statement - Dates Between  @ViewBag.start - @ViewBag.end </h4>
+            </div>
+        </div>
+    </div>
+    <div class="card-body col-lg-12">
+        <table id="accountBalanceTable" class="table table-hover table-responsive-md">
+            <thead>
+                <tr>
+                    <th>Current Balance Code</th>
+                    <th>Debit Balance</th>
+                    <th>Credit Balance</th>
+                    <th>Balance</th>
+                </tr>
+            </thead>
+            <tbody>
+
+                @if (Model.Count > 0)
+                {
+                    @foreach (var account in Model)
+                    {
+                        totalDept += account.CurrentDept;
+                        totalCredit += account.CurrentCredit;
+                        totalBalance = Convert.ToDouble(totalDept - totalCredit);
+                        <tr>
+                            <td>@account.AccountName</td>
+                            <td>@account.CurrentDept &#x20BA;</td>
+                            <td>@account.CurrentCredit &#x20BA;</td>
+                            <td> @Convert.ToDouble((@account.CurrentDept - @account.CurrentCredit)) &#x20BA;</td>
+                        </tr>
+                    }
+                    <tr>
+                        <td>Total</td>
+                        <td>@totalDept &#x20BA;</td>
+                        <td>@totalCredit &#x20BA;</td>
+                        @if (totalBalance > 0)
+                        {
+                            <td class="text-success">@totalBalance &#x20BA;</td>
+                        }
+                        else
+                        {
+                            <td class="text-danger">@totalBalance &#x20BA;</td>
+                        }
+
+
+                    </tr>
+                }
+
+            </tbody>
+        </table>
+    </div>
+</div>
+
+@section scripts{
+
+    <script>
+        $(document).ready(function () {
+
+            $('#accountBalanceTable').DataTable();
+
+            $("#filter").click(function (e) {
+
+                var begin = $("#beginDate").val();
+                var end = $("#endDate").val();
+                var account = $("#accountCode").val();
+
+                if (begin == "" || begin == undefined || end == "" || end == undefined || account == "") {
+                    alert("Begin/end date or account code should be filled!")
+                    e.preventDefault();
+                }
+                else {
+                    if (begin > end) {
+                        alert("End date can not be earlier than begin date!")
+                        e.preventDefault();
+                    }
+                }
+
+            });
+        });
+
+    </script>
+
+}
+

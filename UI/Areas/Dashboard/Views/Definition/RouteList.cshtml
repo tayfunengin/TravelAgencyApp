@@ -1,0 +1,78 @@
+﻿@model IEnumerable<Route>
+@{
+    Layout = "~/Areas/Dashboard/Views/Shared/_DashboardLayout.cshtml";
+}
+
+<div class="card">
+    <div class="card-header col-lg-12">
+        <div class="row">
+            <div class="col-md-9">
+                <h4>Route List</h4>
+            </div>
+            <div class="col-md-3 text-right">
+                <a asp-action="CreateRoute" asp-controller="Definition" data-toggle="tooltip" title="Add New" data-placement="bottom">
+                    <i class="fas fa-plus fa-2x text-muted"></i>
+                </a>
+            </div>
+        </div>
+    </div>
+    <div class="card-body col-lg-12">
+        <table id="routeTable" class="table table-hover table-responsive-md">
+            <thead>
+                <tr>
+                    <th></th>
+                    <th></th>
+                    <th>Route Code</th>
+                    <th>Route Description</th>               
+                    <th>Created Ip Address</th>
+                    <th>Created Date</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var route in Model)
+                {
+                    string bgColor = route.Status == Convert.ToBoolean(Domain.Enums.Status.Active) ? "success" : "danger";
+                <tr class="@bgColor">
+                    <td>
+                        <a asp-action="EditRoute" asp-controller="Definition" asp-area="Dashboard" asp-route-id=@route.Id class="text-success" data-toggle="tooltip" title="Edit" data-placement="bottom">
+                            <i class="far fa-edit text-primary"></i>
+                        </a>
+                    </td>
+                    <td>
+                        @if (route.Status == Convert.ToBoolean(Domain.Enums.Status.Active))
+                        {
+                            <a asp-action="DeleteRoute" asp-controller="Definition" asp-area="Dashboard" asp-route-id=@route.Id data-toggle="tooltip" title="Delete" data-placement="bottom" class="delete">
+                                <i class="far fa-trash-alt text-danger"></i>
+                            </a>
+                        }
+                    </td>
+                    <td>@route.RouteCode</td>
+                    <td>@route.Description</td>                  
+                    <td>@route.CreatedIpAddress</td>
+                    <td>@route.AddedDate</td>
+                </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>
+
+@section scripts{
+    <script>
+
+        $(document).ready(function () {
+
+            $('#routeTable').DataTable();
+
+            $(".delete").click(function (e) {
+
+                var isOK = confirm("Are you sure you want to delete?")
+                if (!isOK) {
+                    e.preventDefault();
+                }
+            });
+
+        });
+    </script>
+
+}

@@ -1,0 +1,162 @@
+﻿@model TransportationCompany
+@{
+    Layout = "~/Areas/Dashboard/Views/Shared/_DashboardLayout.cshtml";
+}
+
+<div class="card">
+    <div class="card-header col-lg-12">
+        <div class="row">
+            <div class="col-md-9">
+                <h4>@Model.TransportationCompanyName - Details</h4>
+            </div>
+            <div class="col-md-3 text-right">
+                <a href="/Dashboard/Seller/TransportationCompanyList" data-toggle="tooltip" title="Go Back" data-placement="bottom" class="back">
+                    <i class="fas fa-arrow-left fa-2x text-muted"></i>
+                </a>
+            </div>
+        </div>
+    </div>
+    <div class="card-body col-lg-12">
+        <ul class="nav nav-tabs" id="myTab" role="tablist">
+            <li class="nav-item active" role="presentation">
+                <a data-toggle="tab" href="#route" class="nav-link active" id="route-tab" data-bs-toggle="tab" type="button" role="tab" aria-controls="route" aria-selected="true">Routes</a>
+            </li>
+            <li class="nav-item" role="presentation">
+                <a data-toggle="tab" href="#transportationPrice" class="nav-link" id="transportationPrice-tab" data-bs-toggle="tab" type="button" role="tab" aria-controls="transportationPrice" aria-selected="false">Prices</a>
+            </li>
+        </ul>
+        <div class="tab-content" id="myTabContent">
+            <div class="tab-pane fade show active" id="route" role="tabpanel" aria-labelledby="route-tab">
+                <div class="row my-3">
+                    <div class="col-md-9">
+                        <h5>Route List</h5>
+                    </div>
+                    <div class="col-md-3 text-right">
+                        <a asp-action="AddRouteToTransportationCompany" asp-controller="Seller" asp-route-id="@Model.Id" data-toggle="tooltip" title="Add New" data-placement="bottom" class="add">
+                            <i class="fas fa-plus fa-2x text-muted"></i>
+                        </a>
+                    </div>
+                </div>
+                <table id="routeTransportationTable" class="table table-hover table-responsive-md">
+                    <thead>
+                        <tr>
+                            <th></th>
+                            <th>Route Code</th>
+                            <th>Description</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var route in Model.Routes)
+                        {
+                            string bgColor = route.Status == Convert.ToBoolean(Domain.Enums.Status.Active) ? "success" : "danger";
+                            <tr class="@bgColor">
+                                <td>
+                                    @if (route.Status == Convert.ToBoolean(Domain.Enums.Status.Active) && Model.Status == Convert.ToBoolean(Domain.Enums.Status.Active))
+                                    {
+                                        <a asp-action="RemoveRouteFromTransportationCompany" asp-controller="Seller" asp-area="Dashboard" asp-route-routeId=@route.Id asp-route-transportationCompanyId="@Model.Id" data-toggle="tooltip" title="Delete" data-placement="bottom" class="delete">
+                                            <i class="far fa-trash-alt text-danger"></i>
+                                        </a>
+                                    }
+                                </td>
+                                <td>@route.RouteCode</td>
+                                <td>@route.Description</td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="tab-pane fade" id="transportationPrice" role="tabpanel" aria-labelledby="transportationPrice-tab">
+                <div class="row my-3">
+                    <div class="col-md-9">
+                        <h5>Price List</h5>
+                    </div>
+                    <div class="col-md-3 text-right">
+                        <a asp-action="CreateTransportationPrice" asp-controller="Price" asp-route-companyId="@Model.Id" data-toggle="tooltip" title="Add New" data-placement="bottom" class="add">
+                            <i class="fas fa-plus fa-2x text-muted"></i>
+                        </a>
+                    </div>
+                </div>
+                <table id="transportationPriceTable" class="table table-hover table-responsive-md">
+                    <thead>
+                        <tr>
+                            <th></th>
+                            <th></th>
+                            <th>Route Code</th>
+                            <th>Description</th>
+                            <th>Year</th>
+                            <th>Purchase Price &euro;</th>
+                            <th>Sale Price &euro;</th>
+                            <th>Created Date</th>
+                            <th>Created Ip Address</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var price in Model.Prices)
+                        {
+                            string bgColor = price.Status == Convert.ToBoolean(Domain.Enums.Status.Active) ? "success" : "danger";
+                            <tr class="@bgColor">
+                                <td>
+                                    <a asp-action="EditTransportationPrice" asp-controller="Price" asp-area="Dashboard" asp-route-id=@price.Id class="text-success edit" data-toggle="tooltip" title="Edit" data-placement="bottom">
+                                        <i class="far fa-edit text-primary"></i>
+                                    </a>
+                                </td>
+                                <td>
+                                    @if (price.Status == Convert.ToBoolean(Domain.Enums.Status.Active))
+                                    {
+                                        <a asp-action="DeleteTransportationPrice" asp-controller="Price" asp-area="Dashboard" asp-route-id=@price.Id data-toggle="tooltip" title="Delete" data-placement="bottom" class="delete">
+                                            <i class="far fa-trash-alt text-danger"></i>
+                                        </a>
+                                    }
+                                </td>
+                                <td>@price.Route.RouteCode</td>
+                                <td>@price.Route.Description</td>
+                                <td>@price.Year</td>
+                                <td>@price.PurchasePrice</td>
+                                <td>@price.SalePrice</td>
+                                <td>@price.AddedDate.ToShortDateString()</td>
+                                <td>@price.CreatedIpAddress</td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+@section scripts{
+    <script>
+
+        $(document).ready(function () {
+
+            $('#routeTransportationTable').DataTable();                   
+            $('#transportationPriceTable').DataTable();    
+            
+            $(".delete").click(function (e) {
+
+                var isOK = confirm("Listeden kaldırmak istediğinize emin misiniz?")
+                if (!isOK) {
+                    e.preventDefault();
+                }
+                sessionStorage.setItem("parentid", "Sellers");
+                sessionStorage.setItem("id", "TransportationCompany");
+            });
+            $(".add").click(function () {
+                sessionStorage.setItem("parentid", "Sellers");
+                sessionStorage.setItem("id", "TransportationCompany");
+            });
+            $(".back").click(function () {
+                sessionStorage.setItem("parentid", "Sellers");
+                sessionStorage.setItem("id", "TransportationCompany");
+            });
+            $(".edit").click(function () {
+                sessionStorage.setItem("parentid", "Sellers");
+                sessionStorage.setItem("id", "TransportationCompany");
+            });
+        });
+
+    </script>
+}
+

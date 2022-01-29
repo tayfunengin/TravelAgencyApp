@@ -1,0 +1,88 @@
+﻿@model IEnumerable<TransportationCompany>
+@{
+    Layout = "~/Areas/Dashboard/Views/Shared/_DashboardLayout.cshtml";
+}
+
+<div class="card">
+    <div class="card-header col-lg-12">
+        <div class="row">
+            <div class="col-md-9">
+                <h4>Transportation Company List</h4>
+            </div>
+            <div class="col-md-3 text-right">
+                <a asp-action="CreateTransportationCompany" asp-controller="Seller" data-toggle="tooltip" title="Add New" data-placement="bottom">
+                    <i class="fas fa-plus fa-2x text-muted"></i>
+                </a>
+            </div>
+        </div>
+    </div>
+    <div class="card-body col-lg-12">
+        <table id="transportationCompanyTable" class="table table-hover table-responsive-md">
+            <thead>
+                <tr>
+                    <th></th>
+                    <th></th>
+                    <th></th>
+                    <th>Company Code</th>
+                    <th>Company Name</th>
+                    <th>Address</th>
+                    <th>Region</th>
+                    <th>Created Date</th>
+                    <th>Created Ip Address</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var company in Model)
+                {
+                    string bgColor = company.Status == Convert.ToBoolean(Domain.Enums.Status.Active) ? "success" : "danger";
+                <tr class="@bgColor">
+                    <td>
+                        <a asp-action="EditTransportationCompany" asp-controller="Seller" asp-area="Dashboard" asp-route-id=@company.Id class="text-success" data-toggle="tooltip" title="Edit" data-placement="bottom">
+                            <i class="far fa-edit text-primary"></i>
+                        </a>
+                    </td>
+                    <td>
+                        @if (company.Status == Convert.ToBoolean(Domain.Enums.Status.Active))
+                        {
+                            <a asp-action="DeleteTransportationCompany" asp-controller="Seller" asp-area="Dashboard" asp-route-id=@company.Id data-toggle="tooltip" title="Delete" data-placement="bottom" class="delete">
+                                <i class="far fa-trash-alt text-danger"></i>
+                            </a>
+                        }
+                    </td>
+                    <td>
+                        <a asp-action="TransportationCompanyDetails" asp-controller="Seller" asp-area="Dashboard" asp-route-id=@company.Id data-toggle="tooltip" title="Details" data-placement="bottom">
+                            <i class="fas fa-bars text-secondary"></i>
+                        </a>
+                    </td>
+                    <td>@company.TransportaionCompanyCode</td>
+                    <td>@company.TransportationCompanyName</td>
+                    <td>@company.Address</td>
+                    <td>@company.Region.RegionName</td>
+                    <td>@company.AddedDate.ToShortDateString()</td>
+                    <td>@company.CreatedIpAddress</td>
+                </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>
+
+@section scripts{
+    <script>
+
+        $(document).ready(function () {
+
+            $('#transportationCompanyTable').DataTable();
+
+            $(".delete").click(function (e) {
+
+                var isOK = confirm("Are you sure you want to delete?")
+                if (!isOK) {
+                    e.preventDefault();
+                }
+            });
+        });
+    </script>
+
+}
+

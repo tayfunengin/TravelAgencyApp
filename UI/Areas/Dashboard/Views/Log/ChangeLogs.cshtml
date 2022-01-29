@@ -1,0 +1,133 @@
+﻿@model IEnumerable<ChangeLog>
+@{    
+    Layout = "~/Areas/Dashboard/Views/Shared/_DashboardLayout.cshtml";
+    DateTime todayDate = DateTime.Now;
+}
+<div class="card">
+    <div class="card-header col-lg-12">
+        <h5>Filters</h5>
+    </div>
+    <div class="card-body col-lg-12">
+        <form method="post" name="changeLogs" id="changeLogsForm">
+            <div class="row">
+                <div class="col-lg-4 col-md-6">
+                    <div class="form-group">
+                        <label>Begin Date:</label>
+                        <input type="text" class="form-control" id="beginDate" name="beginDate" />
+                    </div>
+                </div>
+                <div class="col-lg-4 col-md-6">
+                    <div class="form-group">
+                        <label>End Date:</label>
+                        <input type="text" class="form-control" id="endDate" name="endDate" />
+                    </div>
+                </div>
+                <div class="col-lg-4 col-md-6">
+                    <div class="form-group">
+                        <label>Entity Name:</label>
+                        <input type="text" class="form-control" id="entityName" name="entityName"/>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+
+                <div class="col-lg-2 col-md-3">
+                    <div class="form-group">
+                        <label></label>
+                        <button type="submit" class="form-control btn btn-outline-secondary" id="filter">Filter</button>
+                    </div>
+                </div>
+                <div class="col-lg-2 col-md-3">
+                    <div class="form-group">
+                        <label></label>
+                        <button type="reset" class="form-control btn btn-default" id="resetButton">Clear Filters</button>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+<div class="card">
+    <div class="card-header col-lg-12">
+        <div class="row">
+            <div class="col-md-9">
+                <h4>Change History</h4>
+            </div>
+        </div>
+    </div>
+    <div class="card-body col-lg-12">
+        <table id="changeLogTable" class="table table-hover table-responsive-md">
+            <thead>
+                <tr>
+                    <th>User Name</th>
+                    <th>Computer Name</th>
+                    <th>Ip Address</th>
+                    <th>Modified Date</th>
+                    <th>Entity</th>
+                    <th>Id</th>
+                    <th>Property</th>
+                    <th>Previous Value</th>
+                    <th>Next Value</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var log in Model)
+                {
+                <tr>
+                    <td>@log.UserName</td>
+                    <td>@log.ComputerName</td>
+                    <td>@log.IpAddress</td>
+                    <td>@log.ModifiedDate</td>
+                    <td>@log.EntityName</td>
+                    <td>@log.EntityId</td>
+                    <td>@log.PropertyName</td>
+                    <td>@log.PreviousValue</td>
+                    <td>@log.NextValue</td>
+                </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>
+
+@section scripts{
+
+    <script>
+
+        $(document).ready(function () {
+
+            $("#resetButton").click(function () {
+
+                $("#entityName").val()="";
+            });          
+
+            $('#changeLogTable').DataTable();
+
+            var minDate, maxDate;
+            minDate = new DateTime($('#beginDate'), {
+                format: 'DD MM YYYY HH:mm'
+            });
+            maxDate = new DateTime($('#endDate'), {
+                format: 'DD MM YYYY HH:mm'
+            });
+
+            $("#filter").click(function (e) {
+
+                var begin = $("#beginDate").val();
+                var end = $("#endDate").val();
+   
+                if (end!="") {
+                    if (begin > end) {
+                        alert("End date cannot be earlier than begin date!")
+                        e.preventDefault();
+                    }
+                }
+            });
+
+          
+        });
+
+    </script>
+
+}
+

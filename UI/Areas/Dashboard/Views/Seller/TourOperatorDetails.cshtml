@@ -1,0 +1,162 @@
+﻿@model TourOperator
+@{
+    Layout = "~/Areas/Dashboard/Views/Shared/_DashboardLayout.cshtml";
+}
+
+<div class="card">
+    <div class="card-header col-lg-12">
+        <div class="row">
+            <div class="col-md-9">
+                <h4>@Model.TourOperatorName - Details</h4>
+            </div>
+            <div class="col-md-3 text-right">
+                <a href="/Dashboard/Seller/TourOperatorList" data-toggle="tooltip" title="Go Back" data-placement="bottom" class="back">
+                    <i class="fas fa-arrow-left fa-2x text-muted"></i>
+                </a>
+            </div>
+        </div>
+    </div>
+    <div class="card-body col-lg-12">
+        <ul class="nav nav-tabs" id="myTab" role="tablist">
+            <li class="nav-item active" role="presentation">
+                <a data-toggle="tab" href="#tour" class="nav-link active" id="tour-tab" data-bs-toggle="tab" type="button" role="tab" aria-controls="tour" aria-selected="true">Tours</a>
+            </li>
+            <li class="nav-item" role="presentation">
+                <a data-toggle="tab" href="#tourOperatorPrice" class="nav-link" id="tourOperatorPrice-tab" data-bs-toggle="tab" type="button" role="tab" aria-controls="tourOperatorPrice" aria-selected="false">Prices</a>
+            </li>
+        </ul>
+
+        <div class="tab-content" id="myTabContent">
+            <div class="tab-pane fade show active" id="tour" role="tabpanel" aria-labelledby="tour-tab">
+                <div class="row my-3">
+                    <div class="col-md-9">
+                        <h5>Tour List</h5>
+                    </div>
+                </div>
+                <table id="tourTable" class="table table-hover table-responsive-md">
+                    <thead>
+                        <tr>
+                            <th></th>
+                            <th>Tour Code</th>
+                            <th>Tour Name</th>
+                            <th>Region</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var tour in Model.Tours)
+                        {
+                            string bgColor = tour.Status == Convert.ToBoolean(Domain.Enums.Status.Active) ? "success" : "danger";
+                            <tr class="@bgColor">
+                                <td>
+                                    @if (tour.Status == Convert.ToBoolean(Domain.Enums.Status.Active) && Model.Status == Convert.ToBoolean(Domain.Enums.Status.Active))
+                                    {
+                                        <a asp-action="RemoveTourFromTourOperator" asp-controller="Seller" asp-area="Dashboard" asp-route-tourId=@tour.Id asp-route-operatorId="@Model.Id" data-toggle="tooltip" title="Delete" data-placement="bottom" class="delete">
+                                            <i class="far fa-trash-alt text-danger"></i>
+                                        </a>
+                                    }
+                                </td>
+                                <td>@tour.TourCode</td>
+                                <td>@tour.TourName</td>
+                                <td>@tour.Region.RegionName</td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+
+
+            <div class="tab-pane fade" id="tourOperatorPrice" role="tabpanel" aria-labelledby="tourOperatorPrice-tab">
+                <div class="row my-3">
+                    <div class="col-md-9">
+                        <h5>Price List</h5>
+                    </div>
+                    <div class="col-md-3 text-right">
+                        <a asp-action="CreateTourOperatorPrice" asp-controller="Price" asp-route-operatorId="@Model.Id" data-toggle="tooltip" title="Add New" data-placement="bottom" class="add">
+                            <i class="fas fa-plus fa-2x text-muted"></i>
+                        </a>
+                    </div>
+                </div>
+                <table id="tourOperatorPriceTable" class="table table-hover table-responsive-md">
+                    <thead>
+                        <tr>
+                            <th></th>
+                            <th></th>                          
+                            <th>Tour</th>
+                            <th>Period</th>
+                            <th>Year</th>
+                            <th>Purchase Price</th>
+                            <th>Sale Price</th>
+                            <th>Created Date</th>
+                            <th>Created Ip Address</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var tourPrice in Model.Prices)
+                        {
+                            string bgColor = tourPrice.Status == Convert.ToBoolean(Domain.Enums.Status.Active) ? "success" : "danger";
+                            <tr class="@bgColor">
+                                <td>
+                                    <a asp-action="EditTourOperatorPrice" asp-controller="Price" asp-area="Dashboard" asp-route-id=@tourPrice.Id class="text-success edit" data-toggle="tooltip" title="Edit" data-placement="bottom">
+                                        <i class="far fa-edit text-primary"></i>
+                                    </a>
+                                </td>
+                                <td>
+                                    @if (tourPrice.Status == Convert.ToBoolean(Domain.Enums.Status.Active))
+                                    {
+                                        <a asp-action="DeleteTourOperatorPrice" asp-controller="Price" asp-area="Dashboard" asp-route-id=@tourPrice.Id data-toggle="tooltip" title="Delete" data-placement="bottom" class="delete">
+                                            <i class="far fa-trash-alt text-danger"></i>
+                                        </a>
+                                    }
+                                </td>
+                                <td>@tourPrice.Tour.TourName</td>                              
+                                <td>@tourPrice.Period</td>
+                                <td>@tourPrice.Year</td>
+                                <td>@tourPrice.PurchasePrice &euro;</td>
+                                <td>@tourPrice.SalePrice &euro;</td>
+                                <td>@tourPrice.AddedDate.ToShortDateString()</td>
+                                <td>@tourPrice.CreatedIpAddress</td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+
+    </div>
+</div>
+
+@section scripts{
+    <script>
+
+        $(document).ready(function () {
+
+            $('#tourTable').DataTable();
+            $('#tourOperatorPriceTable').DataTable();
+            
+            $(".delete").click(function (e) {
+
+                var isOK = confirm("Listeden kaldırmak istediğinize emin misiniz?")
+                if (!isOK) {
+                    e.preventDefault();
+                }
+                sessionStorage.setItem("parentid", "Sellers");
+                sessionStorage.setItem("id", "TourOperator");
+            });
+            $(".add").click(function () {
+                sessionStorage.setItem("parentid", "Sellers");
+                sessionStorage.setItem("id", "TourOperator");
+            });
+            $(".back").click(function () {
+                sessionStorage.setItem("parentid", "Sellers");
+                sessionStorage.setItem("id", "TourOperator");
+            });
+            $(".edit").click(function () {
+                sessionStorage.setItem("parentid", "Sellers");
+                sessionStorage.setItem("id", "TourOperator");
+            });
+        });
+    </script>
+
+}
+
