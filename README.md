@@ -4,7 +4,7 @@ This is an application designed for the use of tourism travel agencies selling h
 
 ## Technology
 
-* Net Core 5.0.101
+* Net Core 3.1
 * EntityFrameworkCore 5.0.11
 
 ## Usage
